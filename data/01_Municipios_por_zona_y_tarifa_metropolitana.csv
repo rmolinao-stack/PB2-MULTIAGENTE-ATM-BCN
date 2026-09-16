@@ -1,0 +1,364 @@
+﻿Poblacion;Zona Tarifaria;Sector;Tarifa Metropolitana
+Abrera;3;B;NO
+Aguilar de Segarra;6;E;NO
+Aiguafreda;4;F;NO
+Alella;2;E;NO
+Alpens;6;H;NO
+L'Ametlla del Vallès;4;F;NO
+L'Arboç;5;B;NO
+Arenys de Mar;4;H;NO
+Arenys de Munt;4;H;NO
+Argençola;6;C;NO
+Argentona;3;E;NO
+Artés;6;E;NO
+Avià;7;E;NO
+Avinyó;6;E;NO
+Avinyonet del Penedès;3;B;NO
+Badalona;1;;SI
+Badia del Vallès;2;C;SI
+Bagà;7;F;NO
+Balenyà;5;F;NO
+Balsareny;6;E;NO
+Barberà del Vallès;2;C;SI
+Barcelona;1;;SI
+Begues;2;A;SI
+Bellprat;5;C;NO
+Bellvei;5;B;NO
+Berga;7;F;NO
+Bigues i Riells;4;F;NO
+Biosca;7;C;NO
+Blanes;5;H;NO
+Borredà;7;F;NO
+Breda;4;G;NO
+El Bruc;5;D;NO
+El Brull;5;F;NO
+Les Cabanyes;4;B;NO
+Cabrera d'Anoia;4;C;NO
+Cabrera de Mar;3;E;NO
+Cabrils;2;E;NO
+Calaf;6;C;NO
+Calafell;5;A;NO
+Calders;6;E;NO
+Caldes d'Estrac;3;E;NO
+Caldes de Montbui;3;D;NO
+Calella;4;H;NO
+Calldetenes;6;F;NO
+Callús;6;E;NO
+Calonge de Segarra;6;C;NO
+Campelles;7;H;NO
+Campins;4;G;NO
+Camprodon;7;H;NO
+Canet de Mar;4;H;NO
+Canovelles;3;D;NO
+Cànoves i Samalús;4;F;NO
+Canyelles;4;A;NO
+Capellades;5;C;NO
+Capolat;7;F;NO
+Cardedeu;3;D;NO
+Cardona;6;E;NO
+Carme;5;C;NO
+Casserres;7;E;NO
+Castell de l'Areny;7;F;NO
+Castellar de la Ribera;7;C;NO
+Castellar del Riu;7;F;NO
+Castellar de n'Hug;7;F;NO
+Castellar del Vallès;3;C;NO
+Castellbell i el Vilar;5;E;NO
+Castellbisbal;2;B;SI
+Castellcir;4;F;NO
+Castelldefels;1;;SI
+Castellet i la Gornal;4;B;NO
+Castellfollit del Boix;6;E;NO
+Castellfollit de Riubregós;6;C;NO
+Castellgalí;5;E;NO
+Castellnou de Bages;6;E;NO
+Castellolí;5;D;NO
+Castellterçol;4;F;NO
+Castellví de la Marca;4;B;NO
+Castellví de Rosanes;3;B;NO
+Centelles;5;F;NO
+Cercs;7;F;NO
+Cerdanyola del Vallès;2;C;SI
+Cervelló;2;B;SI
+Clariana de Cardener;7;C;NO
+Collbató;4;D;NO
+Collsuspina;5;F;NO
+la Coma i la Pedra;7;D;NO
+Copons;6;C;NO
+Corbera de Llobregat;2;B;SI
+Cornellà de Llobregat;1;;SI
+Cubelles;4;A;NO
+Cunit;5;A;NO
+Dosrius;3;E;NO
+Esparreguera;3;B;NO
+Espinelves;5;F;NO
+Esplugues de Llobregat;1;;SI
+l'Espunyola;7;E;NO
+L'Esquirol;6;H;NO
+L'Estany;6;E;NO
+Figaró-Montmany;4;F;NO
+Fígols;7;F;NO
+Fogars de Montclús;4;G;NO
+Fogars de la Selva;5;H;NO
+Folgueroles;6;F;NO
+Fonollosa;6;E;NO
+Font-rubí;4;B;NO
+Les Franqueses del Vallès;3;D;NO
+Gaià;6;E;NO
+Gallifa;4;F;NO
+Garraf (Sitges);2;A;NO
+La Garriga;4;F;NO
+Gavà;1;;SI
+Gelida;3;B;NO
+Gironella;7;E;NO
+Gisclareny;7;F;NO
+Gombrèn;7;H;NO
+Gósol;7;F;NO
+La Granada;4;B;NO
+Granera;4;F;NO
+Granollers;3;D;NO
+Guardiola de Berguedà;7;F;NO
+Guixers;7;D;NO
+Gurb;6;F;NO
+Gualba;4;G;NO
+L'Hospitalet de Llobregat;1;;SI
+Els Hostalets de Pierola;4;C;NO
+Hostalric;5;G;NO
+Igualada;6;B;NO
+Jorba;6;B;NO
+La Llacuna;5;C;NO
+Lladurs;7;D;NO
+La Llagosta;2;D;NO
+Llanars;7;H;NO
+Lliçà d'Amunt;3;D;NO
+Lliçà de Vall;3;D;NO
+Llinars del Vallès;3;D;NO
+Llobera;7;C;NO
+les Llosses;7;G;NO
+Lluçà;6;H;NO
+Maçanet de la Selva;6;G;NO
+Malgrat de Mar;5;H;NO
+Malla;5;F;NO
+Manlleu;6;H;NO
+Manresa;6;D;NO
+Marganell;5;E;NO
+Martorell;3;B;NO
+Martorelles;2;D;NO
+Les Masies de Roda;6;F;NO
+Les Masies de Voltregà;6;H;NO
+El Masnou;2;E;NO
+Masquefa;4;C;NO
+Massanes;6;G;NO
+Matadepera;3;C;NO
+Mataró;3;E;NO
+Mediona;4;B;NO
+Moià;5;F;NO
+Molins de Rei;2;B;SI
+Mollet del Vallès;2;D;NO
+Molló;7;H;NO
+la Molsosa;7;C;NO
+Monistrol de Calders;6;E;NO
+Monistrol de Montserrat;4;Z;NO
+Montcada i Reixac;1;;SI
+Montclar;7;E;NO
+Montesquiu;6;H;NO
+Montgat;1;;SI
+Montmajor;7;E;NO
+Montmaneu;6;C;NO
+Montmeló;2;D;NO
+Montornès del Vallès;2;D;NO
+Montseny;4;G;NO
+Muntanyola;5;F;NO
+Mura;5;E;NO
+Navarcles;6;D;NO
+Navàs;6;E;NO
+Navès;7;D;NO
+la Nou de Berguedà;7;F;NO
+Odèn;7;D;NO
+Òdena;6;B;NO
+Ogassa;7;H;NO
+Olèrdola;4;B;NO
+Olesa de Bonesvalls;3;B;NO
+Olesa de Montserrat;3;B;NO
+Olius;7;C;NO
+Olvan;7;E;NO
+Olivella;3;A;NO
+Olost;6;H;NO
+Orís;6;H;NO
+Oristà;6;F;NO
+Orpí;5;C;NO
+Òrrius;3;E;NO
+Pacs del Penedès;4;B;NO
+Palafolls;5;H;NO
+Palau-solità i Plegamans;2;D;NO
+Pallejà;2;B;SI
+La Palma de Cervelló;2;B;SI
+El Papiol;2;B;SI
+Pardines;7;H;NO
+Parets del Vallès;2;D;NO
+Perafita;6;H;NO
+Piera;4;C;NO
+Pineda de Mar;4;H;NO
+Pinell de Solsonès;7;C;NO
+Pinós;7;C;NO
+El Pla del Penedès;4;B;NO
+Planoles;7;H;NO
+La Pobla de Claramunt;5;C;NO
+la Pobla de Lillet;7;F;NO
+Polinyà;2;D;NO
+El Pont de Vilomara i Rocafort;5;E;NO
+Pontons;4;B;NO
+El Prat de Llobregat;1;;SI
+Prats de Lluçanès;6;H;NO
+Els Prats de Rei;6;C;NO
+Premià de Dalt;2;E;NO
+Premià de Mar;2;E;NO
+Puigdàlber;4;B;NO
+Puig-reig;7;E;NO
+Pujalt;6;C;NO
+la Quar;7;F;NO
+Queralbs;7;H;NO
+Rajadell;6;E;NO
+Rellinars;4;E;NO
+Ribes de Freser;7;H;NO
+Riells i Viabrea;4;G;NO
+Riner;7;C;NO
+Ripoll;7;G;NO
+Ripollet;2;C;SI
+La Roca del Vallès;3;D;NO
+Roda de Ter;6;F;NO
+Rubí;2;C;NO
+Rubió;6;B;NO
+Rupit i Pruit;6;H;NO
+Sabadell;2;C;NO
+Sagas;7;E;NO
+Saldes;7;F;NO
+Sallent;6;E;NO
+Sant Adrià de Besòs;1;;SI
+Sant Agustí de Lluçanès;6;H;NO
+Sant Andreu de la Barca;2;B;SI
+Sant Andreu de Llavaneres;3;E;NO
+Sant Antoni de Vilamajor;3;D;NO
+Sant Bartomeu del Grau;6;F;NO
+Sant Boi de Llobregat;1;;SI
+Sant Boi de Lluçanès;6;H;NO
+Sant Cebrià de Vallalta;4;H;NO
+Sant Celoni;4;G;NO
+Sant Climent de Llobregat;2;B;SI
+Sant Cugat del Vallès;2;C;SI
+Sant Cugat Sesgarrigues;4;B;NO
+Sant Esteve de Palautordera;4;G;NO
+Sant Esteve Sesrovires;3;B;NO
+Sant Feliu de Codines;4;F;NO
+Sant Feliu de Llobregat;1;;SI
+Sant Feliu Sasserra;6;E;NO
+Sant Fost de Campsentelles;2;D;NO
+Sant Fruitós de Bages;6;D;NO
+Sant Hipòlit de Voltregà;6;H;NO
+Sant Iscle de Vallalta;4;H;NO
+Sant Jaume de Frontanyà;7;F;NO
+Sant Joan de les Abadesses;7;G;NO
+Sant Joan de Vilatorrada;6;D;NO
+Sant Joan Despí;1;;SI
+Sant Julià de Cerdanyola;7;F;NO
+Sant Julià de Vilatorta;6;F;NO
+Sant Just Desvern;1;;SI
+Sant Llorenç d'Hortons;3;B;NO
+Sant Llorenç de Morunys;7;D;NO
+Sant Llorenç Savall;3;C;NO
+Sant Martí d'Albars;6;H;NO
+Sant Martí de Centelles;4;F;NO
+Sant Martí de Tous;6;B;NO
+Sant Martí Sarroca;4;B;NO
+Sant Martí Sesgueioles;6;C;NO
+Sant Mateu de Bages;6;E;NO
+Sant Pau de Segúries;7;H;NO
+Sant Pere de Ribes;3;A;NO
+Sant Pere de Riudebitlles;4;B;NO
+Sant Pere de Torelló;6;H;NO
+Sant Pere Sallavinera;6;C;NO
+Sant Pere de Vilamajor;4;G;NO
+Sant Pol de Mar;4;H;NO
+Sant Quintí de Mediona;4;B;NO
+Sant Quirze de Besora;6;H;NO
+Sant Quirze del Vallès;2;C;NO
+Sant Quirze Safaja;4;F;NO
+Sant Sadurní d'Anoia;3;B;NO
+Sant Sadurní d'Osormort;6;F;NO
+Sant Salvador de Guardiola;6;E;NO
+Sant Vicenç de Castellet;5;E;NO
+Sant Vicenç de Montalt;3;E;NO
+Sant Vicenç de Torelló;6;H;NO
+Sant Vicenç dels Horts;2;B;SI
+Santa Coloma de Cervelló;2;B;SI
+Santa Coloma de Gramenet;1;;SI
+Santa Cecilia de Voltregà;6;H;NO
+Santa Eugènia de Berga;6;F;NO
+Santa Eulàlia de Riuprimer;6;F;NO
+Santa Eulàlia de Ronçana;3;D;NO
+Santa Fe del Penedès;4;B;NO
+Santa Margarida de Montbui;6;B;NO
+Santa Margarida i els Monjos;4;B;NO
+Santa Maria de Besora;6;H;NO
+Santa Maria de Martorelles;2;D;NO
+Santa Maria de Merlès;7;E;NO
+Santa Maria de Miralles;5;C;NO
+Santa Maria d'Oló;6;E;NO
+Santa Maria de Palautordera;4;G;NO
+Santa Oliva;5;B;NO
+Santa Perpètua de Mogoda;2;D;NO
+Santa Susanna;5;H;NO
+Santpedor;6;D;NO
+Sentmenat;3;D;NO
+Setcases;7;H;NO
+Seva;5;F;NO
+Sitges;3;A;NO
+Sobremunt;6;H;NO
+Solsona;7;C;NO
+Sora;6;H;NO
+Subirats;3;B;NO
+Súria;6;E;NO
+Tagamanent;4;F;NO
+Talamanca;5;E;NO
+Taradell;5;F;NO
+Tavèrnoles;6;F;NO
+Tavertet;6;H;NO
+Teià;2;E;NO
+Terrassa;3;C;NO
+Tiana;1;;SI
+Tona;5;F;NO
+Torà;7;C;NO
+Tordera;5;H;NO
+Torelló;6;H;NO
+La Torre de Claramunt;5;C;NO
+Torrelavit;4;B;NO
+Torrelles de Foix;4;B;NO
+Torrelles de Llobregat;2;B;SI
+Toses;7;H;NO
+Ullastrell;3;C;NO
+Vacarisses;4;E;NO
+Vallbona d'Anoia;5;C;NO
+Vallcebre;7;F;NO
+Vallfogona de Ripollès;7;G;NO
+Vallgorguina;4;G;NO
+Vallirana;2;B;NO
+Vallromanes;2;D;NO
+Veciana;6;C;NO
+El Vendrell;6;A;NO
+Vic;6;F;NO
+Vidrà;6;H;NO
+Vilada;7;F;NO
+Viladecans;1;;SI
+Viladecavalls;3;C;NO
+Viladrau;5;F;NO
+Vilafranca del Penedès;4;B;NO
+Vilalba Sasserra;4;G;NO
+Vilallonga de Ter;7;H;NO
+Vilanova de Sau;6;F;NO
+Vilanova del Camí;6;B;NO
+Vilanova del Vallès;3;D;NO
+Vilanova i la Geltrú;4;A;NO
+Vilassar de Dalt;2;E;NO
+Vilassar de Mar;2;E;NO
+Vilobí del Penedès;4;B;NO
+Viver i Serrateix;7;E;NO

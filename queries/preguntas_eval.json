@@ -1,0 +1,89 @@
+{
+  "descripcion": "Preguntas fijas para evaluación de respuestas RAG",
+  "preguntas": [
+    {
+      "id": "q1",
+      "texto": "¿Qué zonas cubre el abono mensual y cual es su tarifa?",
+      "respuesta_esperada": "Debería dar información sobre T-usual y sus tarifas bonificadas.", 
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+      "id": "q2",
+      "texto": "¿Cual es el billete de 10 viajes integrado?",
+      "respuesta_esperada": "Debería dar información sobre T-casual y T-4.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q3",
+      "texto": "¿Puedo usar un mismo título en metro y cercanías?",
+      "respuesta_esperada": "Debería responder que sí y explicar el sistema de integración tarifaria de la red ATM.",
+      "deberia_abstenerse": false,
+      "notas": "En Cataluña cercanías es rodalies, pero esperamos que el LLM lo pueda interpretar correctamente."
+    },
+    {
+    "id": "q4",
+      "texto": "¿A que zona pertenece Alella?",
+      "respuesta_esperada": "Debería indicando zona y sector.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q5",
+      "texto": "¿A que zona pertenece Olot?",
+      "respuesta_esperada": "Debería indicar que no tiene esta información.",
+      "deberia_abstenerse": true,
+      "notas": "Olot no pertenece a la red ATM."
+    },
+    {
+    "id": "q6",
+      "texto": "¿A que zona pertenece Madrid?",
+      "respuesta_esperada": "Debería indicar que no tiene esta información.",
+      "deberia_abstenerse": true,
+      "notas": "Madrid no solo no pertenece a la red ATM, sino que está fuera de Cataluña."
+    },
+    {
+    "id": "q7",
+      "texto": "¿Cual es el billete para menores de 16 años que ofreceis y como funciona?",
+      "respuesta_esperada": "Debería dar información sobre el abono especial T-16 de un solo pago y sus condiciones de uso.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q8",
+      "texto": "¿Que billete debo comprar para ir de Alpens a Alella?",
+      "respuesta_esperada": "Debe dar información sobre las zonas de las poblaciones y como se calcula la zonificación del trayecto, pero debe abstenerse de dar una ruta y redirigir a la web de ATM.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q9",
+      "texto": "¿Como puedo ir de Alpens a Alella?",
+      "respuesta_esperada": "Debe abstenerse de dar una ruta y únicamente dar la información de la que dispone y redirigir a la web de ATM.",
+      "deberia_abstenerse": true,
+      "notas": ""
+    },
+    {
+    "id": "q10",
+      "texto": "¿Como puedo obtener una factura de mi billete comprado?",
+      "respuesta_esperada": "Debe devolver información de como obtenerla.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q11",
+      "texto": "¿Cuales son las condiciones de devolución de un billete?",
+      "respuesta_esperada": "Debe devolver información sobre las condiciones de devolución de un billete.",
+      "deberia_abstenerse": false,
+      "notas": ""
+    },
+    {
+    "id": "q12",
+      "texto": "¿Cual es la capital de Francia?",
+      "respuesta_esperada": "Debería indicar que no tiene esta información.",
+      "deberia_abstenerse": true,
+      "notas": ""
+    }
+  ]
+}
