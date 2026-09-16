@@ -5,7 +5,7 @@ Para calcular las zonas por las que pasa un trayecto redirigirá a https://www.a
 
 ## Instalación del entorno
 
-Se recomienda la instalación de un entonro virtual como Conda o Env. Ejemplo:
+Se recomienda la instalación de un entorno virtual como Conda o Env. Ejemplo:
 
 ```text
 python -m venv .venv
@@ -28,7 +28,7 @@ cp .env.example .env # editar la API key del proveedor elegido
 
 Hay dos modos de ejecución:
 
-* Modo 1: Por línea de comandos usando python main.py y su correspondiente parametro. Se usa principalmente para la ingesta, el embedding, la indexación y la realización de juego de pruebas.
+* Modo 1: Por línea de comandos usando python main.py y su correspondiente parámetro. Se usa principalmente para la ingesta, el embedding, la indexación y la realización de juego de pruebas.
 
 ```text
   python main.py --prepare                 #"Ingesta + embeddings (tiempo estimado de ejecución ~ 10 min)"
@@ -41,7 +41,7 @@ Hay dos modos de ejecución:
   python main.py --top-k                   #"Sobreescribe TOP-K"
   ```
 
-  * Modo 2: Desde línea de comandos usar *streamlit run app.py*. Ejecuta el servidor de streamlit y abre un chat para interacturar con el asistente.
+  * Modo 2: Desde línea de comandos usar *streamlit run app.py*. Ejecuta el servidor de streamlit y abre un chat para interactuar con el asistente.
 
 ```text
 streamlit run app.py
@@ -69,9 +69,9 @@ streamlit run app.py
 
 * El documento *01_Municipios_por_zona_y_tarifa_metropolitana.csv* NO se he incluido en el embedding y por tanto NO se ha incluido en el la BBDD vectorial. El motivo es que al ser una lista de municipios, se tratara como se tratara, generaba mucho ruido. Lo que se ha hecho es tratar en la fase de prompt, analizando si la pregunta contiene algún municipio de la lista (con cierta flexibilidad) e inyectando la información en el prompt para reducir el impacto en la fase de embedding. Para más detalle ver apartado de incidencias y peculiaridades del proyecto.
 
-* Se ha mentenido la estructura *--prepare* donde se genera ingesta y embedding en ficheros, e *--index* donde se genera el indice ChromaDB desde los ficheros para seguir la estructura propuesta por la académia y sobre todo porque esta configuración permite hacer ajustes sobre parámetros de la BBDD ChromaDB sin tener que regenerar el embedding, no obstante en un entorno de producción se considera adecuado unificar los 3 apartados en el *--prepare* para no generar el fichero embeddings.json y que siempre haga borrado de indice (por tanto también dejaría de tener sentido *--recreate-index*)
+* Se ha mantenido la estructura *--prepare* donde se genera ingesta y embedding en ficheros, e *--index* donde se genera el índice ChromaDB desde los ficheros para seguir la estructura propuesta por la academia y sobre todo porque esta configuración permite hacer ajustes sobre parámetros de la BBDD ChromaDB sin tener que regenerar el embedding, no obstante en un entorno de producción se considera adecuado unificar los 3 apartados en el *--prepare* para no generar el fichero embeddings.json y que siempre haga borrado de indice (por tanto también dejaría de tener sentido *--recreate-index*)
 
-* Para calcular el tiempo de ejecución, para amplicar el loggin de *responder*, se ha tenido en cuenta todas las tareas que se hacen dentro de *responder* y no solo el tiempo de respuesta del modelo.
+* Para calcular el tiempo de ejecución, para ampliar el loggin de *responder*, se ha tenido en cuenta todas las tareas que se hacen dentro de *responder* y no solo el tiempo de respuesta del modelo.
 
 ## Estructura del proyecto
 
@@ -131,37 +131,37 @@ Todos los datos son públicos.
 | 9 | `31_Condiciones_de_uso_titulos_transporte.pdf` | [Condiciones uso](https://www.tmb.cat/es/tarifas-metro-bus-barcelona/condiciones-uso-billetes) | SI |
 
 ## Proceso de desarrollo
-En este apartado se describe como ha sido el proceso de construcción del proyecto, desde la primera toma de decisón hasta la entrega final.
+En este apartado se describe como ha sido el proceso de construcción del proyecto, desde la primera toma de decisión hasta la entrega final.
 
 ### Paso 1: ¿Que va a hacer el proyecto y cual será el corpus?
 
-El proyecto consistirá en un asistente de tarifas y abonos para la red ATM (Autoridad de Transporte Metropolitano) de Barcelona que se encarga de gestionar el sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, tranvía, Ferrocarrils y Rodalies) de la Gran Area Metropolitana de Barceelona.
+El proyecto consistirá en un asistente de tarifas y abonos para la red ATM (Autoridad de Transporte Metropolitano) de Barcelona que se encarga de gestionar el sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, tranvía, Ferrocarrils y Rodalies) de la Gran Área Metropolitana de Barcelona.
 
-El objetivo del asistente es que sea capaz de recomendar el abono a escoger según los datos, de edad, ubicació de destino, ubicación origen, además de poder responder preguntas sobre condiciones de uso.
+El objetivo del asistente es que sea capaz de recomendar el abono a escoger según los datos, de edad, ubicación de destino, ubicación origen, además de poder responder preguntas sobre condiciones de uso.
 
-No es un asitente de rutas. Solo de tarifas y abonos. Si bien será capaz de responder cual es el abono a adquirir en trayectos entre dos ciudades dentro de la red, no es capaz de devolver ni la mejor ruta, ni información sobre paradas. Igualmente el asistente dará información basada en la zona de cada parada (origen y destino), pero es posible que exista una ruta que requiera pasar por menos zonas pudiendo adquirir un billete más barato.
+No es un asistente de rutas. Solo de tarifas y abonos. Si bien será capaz de responder cual es el abono a adquirir en trayectos entre dos ciudades dentro de la red, no es capaz de devolver ni la mejor ruta, ni información sobre paradas. Igualmente el asistente dará información basada en la zona de cada parada (origen y destino), pero es posible que exista una ruta que requiera pasar por menos zonas pudiendo adquirir un billete más barato.
 
-Dado que la red integrada de ATM está directamente relacionada con TMB (Transporte Metropolitáno de Barcelona) que depende de AMB (Área Metropolitana de Barcelona), se incluirá información de esta última para darle consistencia al asistente, pero el objetivo del mismo es dar información sobre billetes integrados, y no sobre los billetes NO integrados de la redes particulares de FCG (Ferrocarriles Catalanes de la Generalitat), Rodalías (Cercanías de Cataluña), Tramvia y Autobuses (ni metropolitanos, urbanos o interurbanos).
+Dado que la red integrada de ATM está directamente relacionada con TMB (Transporte Metropolitano de Barcelona) que depende de AMB (Área Metropolitana de Barcelona), se incluirá información de esta última para darle consistencia al asistente, pero el objetivo del mismo es dar información sobre billetes integrados, y no sobre los billetes NO integrados de la redes particulares de FCG (Ferrocarriles Catalanes de la Generalitat), Rodalías (Cercanías de Cataluña), Tramvia y Autobuses (ni metropolitanos, urbanos o interurbanos).
 
-El motivo de no incluir información de paradas o de los billetes no integrados es para no complicar el proyecto y no tener un corpus que supere los 20 documentos estipulados por la academía.
+El motivo de no incluir información de paradas o de los billetes no integrados es para no complicar el proyecto y no tener un corpus que supere los 20 documentos estipulados por la académia.
 
 ### Paso 2: Descubrimiento y extracción de datos.
 
 Si bien existen páginas [developer.tmb.cat](https://developer.tmb.cat/) o [opendata-ajuntament.barcelona.cat](http://opendata-ajuntament.barcelona.cat/), la información que devuelve es muy específica sobre paradas, líneas o incidencias y no se han utilizado.
 
-Finalmente las fuentes más fiables y desde donde se ha podido recopilar toda la información son:
+Finalmente, las fuentes más fiables y desde donde se ha podido recopilar toda la información son:
 
 * https://www.tmb.cat
 * https://www.atm.cat
   
 ### Paso 3: Curado de datos y transformación final para su uso.
 
-Se ha generado un csv con la lista de municipios incluidos dentro del ATM, la zona a la que pertenen y el sector (que hace que aún siendo de la misma implicará comprar billete de varios sectores), otra con la lista de municipios de que están incluidas dentro de la tarifa metropolitan aún siendo de sectores diferentes, y un csv con los abonos y sus tarifas según sector.
+Se ha generado un csv con la lista de municipios incluidos dentro del ATM, la zona a la que pertenecen y el sector (que hace que aún siendo de la misma implicará comprar billete de varios sectores), otra con la lista de municipios de que están incluidas dentro de la tarifa metropolitana aun siendo de sectores diferentes, y un csv con los abonos y sus tarifas según sector.
 
-Además se incluye pdf con la explicación de como funciona el sistema tarifario y la tarifa metropolitana. Documento con explicación de cada uno de los abonos. Documento con condiciones de uso general y documento con preguntas frecuentes.
+Ademas se incluye pdf con la explicación de como funciona el sistema tarifario y la tarifa metropolitana. Documento con explicación de cada uno de los abonos. Documento con condiciones de uso general y documento con preguntas frecuentes.
 
 ### Paso 4: main.py
-Se genera el main.py con los parametros de entrada indicados anteriormente.
+Se genera el main.py con los parámetros de entrada indicados anteriormente.
 
 ### Paso 5: se reestructuran las carpetas por responsabilidad
 
@@ -175,19 +175,19 @@ Se programa la Ingesta y el embeding que se ejecuta mediante: python main.py --p
 * Para los pdfs usamos PyPDFLoader de Langchain que coge el texto y genera el metadato. Para los CSVs lo construimos nosotros.
   * En este primer pre-procesado los pdfs se parten por página, y los CSV por filas.
 * Hacemos la limpieza de datos.
-* Construimos los chunks, calculamos estadisticas y lo almacenamos como un json para su futuro uso.
+* Construimos los chunks, calculamos estadísticas y lo almacenamos como un json para su futuro uso.
 * Se genera el fichero chunks.json para su uso en el embedding
 
 **Continuamos con el embedding del corpus**: Se llama a ejecutar_embeddings() de embed.py.
 * Cargamos la API Key de google.
 * Cargamos todos los chunks y se los pasamos al modelo de embedding en paquetes para no saturar al LLM.
   * **<span style="color:red;">NOTA IMPORTANTE:</span>** Entre llamada y del embedding se ha hecho un sleep de 60 segundos ya que he tenido muchos problemas. Este tiempo es parametrizable a través del parametro de sistema EMBEDDING_SLEEP.
-* Finalmente se genera el fichero embedding.json para su uso a la hora de generar el indice de Chroma
+* Finalmente se genera el fichero embedding.json para su uso a la hora de generar el índice de Chroma
   * **Nota:** En un entorno de producción no se debería generar este fichero, y se tendría que pasar el resultado al indice de chroma, reunificando estas opciones. No obstante se ha mentenido así por seguir el esquema de la academía y sobre todo porque este sistema (y la estructura del código base) facilita la regeneración del indice sin tener que volver a llamar al embedding.
 
 ### Paso 7: Se genera el indice en la BBDD ChromaDB (--index)
 
-Se recupera el fichero embedding.json con los indices y los carga en la BBDD ChromaDB.
+Se recupera el fichero embedding.json con los índices y los carga en la BBDD ChromaDB.
 
 ### Paso 8: Programación opción --query que devuelve los chunks guardados en BBDD por similitud de la pregunta
 
@@ -201,7 +201,7 @@ El documento 01_Municipios_por_zona_y_tarifa_metropolitana.csv no está incluido
 
 Programación de opción --ask
 
-Se programa el prompt con todos los controles de seguiridad.
+Se programa el prompt con todos los controles de seguridad.
 
 Se programa la extracción determinista mediante Pandas de poblaciones según la pregunta, a través de 01_Municipios_por_zona_y_tarifa_metropolitana.csv y se inyecta en el prompt.
 
@@ -221,7 +221,7 @@ Se construye app.py con el frontend y se llama a la API responder de rag_service
 
 ### Paso 13: Validación
 
-Se ejecutan varias pregunta --eval con top-k=5 que es el top-k estandar, para verificar que el comportamiento es el esperado. Ver resultados en *preguntas_respuestas_topk5.md*
+Se ejecutan varias pregunta --eval con top-k=5 que es el top-k estándar, para verificar que el comportamiento es el esperado. Ver resultados en *preguntas_respuestas_topk5.md*
 
 ## Q&A: Preguntas de ejemplo y resultado esperado
 
@@ -229,11 +229,11 @@ En este apartado se describe una serie de preguntas a realizar al asistente y el
 
 | Nº | Pregunta | Respuesta esperada |
 |---------|-----------|--------------|
-| 1 | ¿Qué zonas cubre el abono mensual y cual es su tarifa? | Debería dar información sobre T-usual y sus tarifas bonificadas.|
-| 2 | ¿Cual es el billete de 10 viajes integrado? | Debería dar información sobre T-casual y T-4.|
+| 1 | ¿Qué zonas cubre el abono mensual y cuál es su tarifa? | Debería dar información sobre T-usual y sus tarifas bonificádas.|
+| 2 | ¿Cuál es el billete de 10 viajes integrado? | Debería dar información sobre T-casual y T-4.|
 | 3 | ¿Puedo usar un mismo título en metro y cercanías? | Debería responder que sí y explicar el sistema de integración tarifaria de la red ATM.|
-| 4 | ¿Cual es el billete para menores de 16 años que ofreceis y como funciona? | Debería dar información sobre el abono especial T-16 de un solo pago y sus condiciones de uso.|
-| 5 | ¿A que zona pertenece Alella? | Debería indicando zona y sector.|
+| 4 | ¿Cuál es el billete para menores de 16 años que ofrecéis y cómo funciona? | Debería dar información sobre el abono especial T-16 de un solo pago y sus condiciones de úso.|
+| 5 | ¿A qué zona pertenece Alella? | Debería indicando zona y sector.|
 
 ## Q&A --eval: Evaluación de preguntas_eval.json con top-k=5 y top-k=1
 
@@ -250,9 +250,9 @@ Resultado en carpeta querys:
 * **Problema con csv municipios:** 
   * Se tuvo que reescribir la ingesta de 01_Municipios_por_zona_y_tarifa_metropolitana.csv ya que generaba muchos chunks (363 de los 441 generados) y muy pequeños y en el retriever solo devolvía municipios y municipios. 
   * Se sustituyó cargar_csv_municipios (que se ha dejado comentado a nivel didactico) por cargar_csv_municipios_por_zona, agrupando los municipios en un solo documento por zona. 
-  * No obstante esto hacía que cada vez que se preguntaba sobre municipios, se devolvían los chunks de este fichero por delente de los demás, haciendo que tuvier que poner un top-k muy grande para que se tuviera en cuenta los otros documentos.
+  * No obstante esto hacía que cada vez que se preguntaba sobre municipios, se devolvían los chunks de este fichero por delante de los demás, haciendo que tuvier que poner un top-k muy grande para que se tuviera en cuenta los otros documentos.
   * Además para no perder contexto sobre zonas, sectores, etc.. se tenía que poner un chunk_size muy grande para no partir la información (ya que sino el LLM no sabía muy bien que hacer con la información partida).
-  * La conclusión fué que este csv, se tratara como se tratara, generaba mucho ruido, por tanto **se decidió sacar este documento del embedding y revisar si la pregunta contenía poblaciones, buscarlo en el CSV con Pandas e inyectar la inforamción en el prompt**.
+  * La conclusión fue que este csv, se tratara como se tratara, generaba mucho ruido, por tanto **se decidió sacar este documento del embedding y revisar si la pregunta contenía poblaciones, buscarlo en el CSV con Pandas e inyectar la inforamción en el prompt**.
   * Esta estrategía función bien, y me permitió reducir el top-k, el chunk_size y no se generaba ruido.
 * Se tuvo que añadir un sleep de 60 segundos entre lotes de embeddings (embeddear_textos de embed.py) porque saturaba la cuota del free tier de google.
 
