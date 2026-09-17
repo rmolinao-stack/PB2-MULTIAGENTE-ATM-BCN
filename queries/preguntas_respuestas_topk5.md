@@ -28,10 +28,11 @@ Adicionalmente, según la "Tarifa metropolitana" (Fuente: 21_Tarifa_metropolitan
 
 [q2] ¿Cual es el billete de 10 viajes integrado?
   deberia_abstenerse=False
-  respuesta: El contexto proporcionado no contiene información sobre un billete genérico de 10 viajes integrado.
+  respuesta: Existen diferentes títulos de 10 viajes integrados en el sistema tarifario de la ATM, dependiendo de las condiciones del usuario:
 
-Únicamente menciona la **T-4**, que es un título personal con 10 viajes destinado a personas que disponen de la T-metropolitana tarjeta rosa reducida (Fuente: *25_Otros_titulos_integrados_y_sus_tarifas.pdf*).
-  fuentes: ['31_Condiciones_de_uso_titulos_transporte.pdf', '25_Otros_titulos_integrados_y_sus_tarifas.pdf', '11_Intro_sistema tarifario integrado.pdf', '11_Intro_sistema_tarifario_integrado.pdf']
+*   **T-casual:** Es un título unipersonal de 10 viajes integrados en todos los modos de transporte según las zonas por las que se transite (pago máximo 7 zonas). No es nominal, pero no permite que distintas personas lo utilicen al mismo tiempo. No es válido en las estaciones de metro Aeroport T1 y Aeroport T2 de la línea L9 Sud (Fuente: *23_Descripcion_tipos_billetes_ATM.pdf*).
+*   **T-4:** Es un título personal de 10 viajes para personas que disponen de la T-metropolitana tarjeta rosa reducida. Es válido para realizar 10 desplazamientos integrados en la red debus y metro de TMB (excepto servicios especiales y Barcelona Bus Turístic), líneas de bus del AMB, FGC (dentro del ámbito de la tarifa metropolitana) y Tram. También es válido en las estaciones de metro Aeroport T1 y Aeroport T2 de la línea L9 Sud (Fuente: *25_Otros_titulos_integrados_y_sus_tarifas.pdf*).
+  fuentes: ['31_Condiciones_de_uso_titulos_transporte.pdf', '25_Otros_titulos_integrados_y_sus_tarifas.pdf', '11_Intro_sistema_tarifario_integrado.pdf', '23_Descripcion_tipos_billetes_ATM.pdf']
 
 
 ============================================================
@@ -47,16 +48,12 @@ Debes tener en cuenta lo siguiente:
   fuentes: ['31_Condiciones_de_uso_titulos_transporte.pdf']
   notas: En Cataluña cercanías es rodalies, pero esperamos que el LLM lo pueda interpretar correctamente.
 
-
 ============================================================
 
 [q4] ¿A que zona pertenece Alella?
   deberia_abstenerse=False
   respuesta: Alella pertenece a la Zona 2, Sector E (Fuente: 01_Municipios_por_zona_y_tarifa_metropolitana.csv).
   fuentes: ['11_Intro_sistema_tarifario_integrado.pdf', '11_Intro_sistema tarifario integrado.pdf', '21_Tarifa_metropolitana.pdf']
-
-
-
 
 ============================================================
 
@@ -65,7 +62,6 @@ Debes tener en cuenta lo siguiente:
   respuesta: El contexto proporcionado no contiene información sobre a qué zona pertenece Olot.
   fuentes: ['11_Intro_sistema_tarifario_integrado.pdf', '11_Intro_sistema tarifario integrado.pdf', '12_sistema_tarifario_integrado.pdf']
   notas: Olot no pertenece a la red ATM.
-
 
 ============================================================
 
