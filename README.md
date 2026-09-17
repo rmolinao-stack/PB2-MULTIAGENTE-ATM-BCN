@@ -1,5 +1,5 @@
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
-Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
+Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
 
 ## Instalación del entorno
 
@@ -35,7 +35,7 @@ Hay dos modos de ejecución:
   python main.py --recreate-index          #"Borra la colección de ChromaDB antes de indexar"
   python main.py --query                   #"Pregunta de prueba que solo ataca al retrieval (recuperación de contexto)"
   python main.py --ask                     #"Pregunta con respusta generada por el modelo (RAG completo)"
-  python main.py --eval                    #"Evaluación del retrieval con preguntas preestablecidas"
+  python main.py --eval                    #"Evaluación con preguntas preestablecidas"
   python main.py --top-k                   #"Sobreescribe TOP-K"
   ```
 
