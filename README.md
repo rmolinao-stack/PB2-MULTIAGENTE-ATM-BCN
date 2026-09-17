@@ -1,8 +1,6 @@
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
 
-Para calcular las zonas por las que pasa un trayecto redirigirá a https://www.atm.cat/es/titols-tarifes/sistema-de-transport/mapa-de-la-zonificacio
-
 ## Instalación del entorno
 
 Se recomienda la instalación de un entorno virtual como Conda o Env. Ejemplo:
