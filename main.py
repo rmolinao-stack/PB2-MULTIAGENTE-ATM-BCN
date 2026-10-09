@@ -15,13 +15,13 @@ App Streamlit: streamlit run app.py
 import argparse
 import json
 
-from core.pipeline import ejecutar_ingesta
-from core.embed import ejecutar_embeddings
-from core.index import ejecutar_indexacion
-from core.retriever import recuperar
-from core.context import imprimir_contexto
+from rag.pipeline import ejecutar_ingesta
+from rag.embed import ejecutar_embeddings
+from rag.index import ejecutar_indexacion
+from rag.retriever import recuperar
+from rag.context import imprimir_contexto
 from services.rag_service import responder
-from core.eval_retrieval import ejecutar_evaluacion
+from rag.eval_retrieval import ejecutar_evaluacion
 
 
 def preparar_ingesta_y_embeddings(solo_ingesta: bool = False) -> None:

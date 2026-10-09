@@ -85,8 +85,9 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 ├── app.py                    # Streamlit.
 ├── common/                   # Carpeta donde guardamos ficheros comunes como comfig o utils.
 │   ├── config.py             # Se definen parametros generales del sistema.
+│   ├── gemini_auth.py        # Carga de API key de gemini.
 │   └── utils.py              # Funciones genéricas auxiliares y reutilizables.
-├── core/                     # Carpeta donde guardamos los ficheros de la capa de negocio.
+├── rag/                      # Carpeta donde guardamos los ficheros de la capa de negocio del RAG.
 │   ├── pipeline.py           # Orquestador de la ingesta y otras llamadas.
 │   ├── load.py               # Revisa los ficheros del corpues y lo carga con metadatos.
 │   ├── chunk.py              # Construye los chunks
@@ -96,9 +97,8 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 │   ├── clean.py              # Limpieza de documentos. Podría estar en utils.py
 │   ├── context.py            # Formatea contexto. Podría estar en utils.py
 │   ├── eval_retrieval.py     # Para la opción --eval
-│   ├── prompts.py            # Construye el prompt
-│   ├── gemini_auth.py        # Carga de API key de gemini. Podría estar un paquete LLM
-│   └── generate.py           # Llama al modelo. Podría estar en un pequete LLM
+│   ├── prompts.py            # Construye el prompt 
+│   └── generate.py           # Llama al modelo para el RAG.
 ├── data/                     # Corpus
 ├── entregables/              # informe final del equipo
 │   └── informe_decisiones.md

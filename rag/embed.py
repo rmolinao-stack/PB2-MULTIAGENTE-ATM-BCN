@@ -9,7 +9,7 @@ from google.genai import types
 
 from common.config import CHUNKS_JSON, EMBEDDING_MODEL, EMBEDDING_SLEEP, EMBEDDINGS_JSON, MAX_CHUNKS_EMBED, EMBED_BATCH_SIZE
 
-from .gemini_auth import configurar_gemini_api_key
+from common.gemini_auth import configurar_gemini_api_key
 
 def _extraer_vector(embedding_obj) -> list[float]:
     if hasattr(embedding_obj, "values"):

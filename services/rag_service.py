@@ -8,10 +8,10 @@ El frontend (o quien los consuma) llamará a estas funciones.
 import time
 
 from common.config import GEMINI_MODEL
-from core.retriever import recuperar
-from core.context import formatear_contexto
-from core.prompts import build_rag_prompt
-from core.generate import generar_respuesta
+from rag.retriever import recuperar
+from rag.context import formatear_contexto
+from rag.prompts import build_rag_prompt
+from rag.generate import generar_respuesta
 from common.utils import _extraer_fuentes
 
 def responder(pregunta: str, top_k: int | None = None) -> dict:
