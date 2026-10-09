@@ -1,13 +1,17 @@
 """Punto de entrada del pipeline RAG completo (S8 + S9 + S10).
 
-Uso:
-  python main.py --prepare                  # Ingesta + embeddings
-  python main.py --index                    # Indexar en ChromaDB
-  python main.py --index --recreate-index   # Borra la colección de ChromaDB antes de indexar
-  python main.py --query "pregunta"         # Pregunta de prueba (retrieval + contexto)
-  python main.py --ask "pregunta"           # RAG completo: respuesta generada
-  python main.py --eval                     # Evaluación del retrieval con preguntas preestablecidas
+Uso CLI para RAG:
+  python main.py --prepare                      # Ingesta + embeddings
+  python main.py --prepare --solo-ingesta       # Solo realizar la ingesta sin ejecutar embeddings
+  python main.py --index                        # Indexar en ChromaDB
+  python main.py --index --recreate-index       # Borra la colección de ChromaDB antes de indexar
+  python main.py --query "pregunta"             # Pregunta de prueba (retrieval + contexto)
+  python main.py --ask "pregunta"               # RAG completo: respuesta generada
+  python main.py --query "pregunta" --top-k 5   # Sobreescribe TOP-K
+  python main.py --ask "pregunta" --top-k 5     # Sobreescribe TOP-K
+  python main.py --eval                         # Evaluación del retrieval con preguntas preestablecidas
 
+Uso CLI para workflow LangGraph:
 
 App Streamlit: streamlit run app.py
 """
