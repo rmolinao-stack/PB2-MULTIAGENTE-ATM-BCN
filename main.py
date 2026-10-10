@@ -12,6 +12,7 @@ Uso CLI para RAG:
   python main.py --eval                         # Evaluación del retrieval con preguntas preestablecidas
 
 Uso CLI para workflow LangGraph:
+  python main.py --multiagente                  # Ejecuta el workflow del multiagente por CLI
 
 App Streamlit: streamlit run app.py
 """
@@ -74,7 +75,7 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=None, help="Sobreescribe TOP-K")
     
     ########## RMO: PARAMETROS DEL MULTIAGENTE ###############
-    
+    parser.add_argument("--multiagente", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
     
 
     args = parser.parse_args()

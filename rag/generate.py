@@ -3,7 +3,7 @@
 from google import genai
 
 from common.config import GEMINI_MODEL, GENERATION_TEMPERATURE
-from common.cargar_api_keys import configurar_gemini_api_key
+from common.cargar_api_key import configurar_gemini_api_key
 
 
 def generar_respuesta(prompt: str) -> str:
