@@ -47,7 +47,8 @@ def responder(pregunta: str, top_k: int | None = None) -> dict:
         "error": None,
     }
 
+
 def rag_ask(consulta: str) -> str:
-    """Pendiente documentar."""
-    print("rag_ask: Pendiente de realizar")    
-    return None
+    """Función auxiliar para realizar un RAG completo y devolver solo la respuesta generada."""
+    resultado = responder(consulta)
+    return resultado.get("respuesta") if resultado else None

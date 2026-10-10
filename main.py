@@ -62,6 +62,8 @@ def main() -> None:
         (metro, autobuses, Ferrocarrils y Rodalies)
         """
     )
+
+    ############ RMO: PARAMETROS DEL RAG ###################
     parser.add_argument("--prepare", action="store_true", help="Ingesta + embeddings (tiempo estimado de ejecución ~ 10 min)")
     parser.add_argument("--solo-ingesta", action="store_true", help="Solo realizar la ingesta sin ejecutar embeddings")
     parser.add_argument("--index", action="store_true", help="Indexar en ChromaDB")
@@ -70,6 +72,9 @@ def main() -> None:
     parser.add_argument("--ask", type=str, help="Pregunta con respusta generada por el modelo (RAG completo)")
     parser.add_argument("--eval", action="store_true", help="Evaluación del retrieval con preguntas preestablecidas")
     parser.add_argument("--top-k", type=int, default=None, help="Sobreescribe TOP-K")
+    
+    ########## RMO: PARAMETROS DEL MULTIAGENTE ###############
+    
     
 
     args = parser.parse_args()

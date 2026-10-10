@@ -50,7 +50,7 @@ Hay dos modos de ejecución:
   * Modo 2: Desde línea de comandos usar *streamlit run app.py*. Ejecuta el servidor de streamlit y abre un chat para interactuar con el asistente.
 
 ```text
-streamlit run app.py
+streamlit run app_rag.py
 ```
 
 ## Orden de ejecución estandar
