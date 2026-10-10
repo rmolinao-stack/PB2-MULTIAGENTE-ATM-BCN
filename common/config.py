@@ -38,3 +38,10 @@ GENERATION_TEMPERATURE = 0.2
 # --- Evaluación ---
 QUERIES_EVAL_JSON = Path(__file__).parent.parent / "queries" / "preguntas_eval.json"
 
+# --- Parámetros por defecto para el multi agente ---
+MAX_STEPS_DEFAULT = 4
+MAX_TURNS_DEFAULT = 6
+MAX_ITER = 8
+
+#
+

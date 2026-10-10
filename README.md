@@ -1,3 +1,11 @@
+# PB2-MULTIAGENTE-TARIFAS-ATM-BCN
+
+## API https://developer.tmb.cat/
+
+* Se utilizará la API de https://developer.tmb.cat/
+* Se requiere un app_id y un app_key.
+* Para más información visitar https://developer.tmb.cat/docs/getting-started
+
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
 
