@@ -83,6 +83,8 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 ├── .gitignore
 ├── main.py                   # CLI: prepare / index / query / ask.
 ├── app.py                    # Streamlit.
+├── assets/                   
+│   └── plano_ATM.jpg         # Plano para la herramienta
 ├── common/                   # Carpeta donde guardamos ficheros comunes como comfig o utils.
 │   ├── config.py             # Se definen parametros generales del sistema.
 │   ├── gemini_auth.py        # Carga de API key de gemini.
@@ -99,8 +101,8 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 │   ├── eval_retrieval.py     # Para la opción --eval
 │   ├── prompts.py            # Construye el prompt 
 │   └── generate.py           # Llama al modelo para el RAG.
-├── data/                     # Corpus
-├── entregables/              # informe final del equipo
+├── data/                     # Corpus del RAG
+├── entregables/              # informe final.
 │   └── informe_decisiones.md
 ├── output/                   # Ficheros generados entre ellos el indice de chromaDB
 ├── queries/                  # preguntas de evaluación
