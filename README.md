@@ -10,7 +10,7 @@ Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula
 
 ## Ejecución 
 
-python main.py --multiagente                  # Ejecuta el workflow del multiagente por CLI
+python main.py --multiagent                   # Ejecuta el workflow del multiagente por CLI
 
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
@@ -122,7 +122,7 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 ├── output/                     # Ficheros generados entre ellos el indice de chromaDB
 ├── queries/                    # preguntas de evaluación
 └── services/                   # Carpeta donde se encuentras los servicios que llamara Streamlit u otros.
-    ├── multiagente_service.py  # Servicios que ejecutar el multiagente. 
+    ├── multiagent_service.py   # Servicios que ejecutar el multiagente. 
     └── rag_service.py          # Servicios relacionados con RAG. 
 
 
