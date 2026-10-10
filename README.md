@@ -1,4 +1,4 @@
-# PB2-MULTIAGENTE-TARIFAS-ATM-BCN
+# PB2-MULTIAGENTE-ATM-BCN
 
 Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula el tiempo que tardará en llegar un convoy del Metro a una estación en tiempo real.
 
