@@ -12,7 +12,7 @@ Uso CLI para RAG:
   python main.py --eval                         # Evaluación del retrieval con preguntas preestablecidas
 
 Uso CLI para workflow LangGraph:
-  python main.py --multiagente                  # Ejecuta el workflow del multiagente por CLI
+  python main.py --multiagent                   # Ejecuta el workflow del multiagente por CLI
 
 App Streamlit: streamlit run app.py
 """
@@ -55,6 +55,10 @@ def ejecutar_opcion_ask(pregunta: str, top_k: int | None) -> None:
         indent=2,
     ))
 
+def ejecutar_opcion_multiagent() -> None:
+    print("ES EL _interactivo DE LOS EJEMPLOS!!!!! - PENDIENTE DE IMPLEMENTAR")
+    print("Creo que debería únicamente llamar a ejeuctar_multiagente en otros sitio!!!!")
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="""
@@ -75,7 +79,7 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=None, help="Sobreescribe TOP-K")
     
     ########## RMO: PARAMETROS DEL MULTIAGENTE ###############
-    parser.add_argument("--multiagente", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
+    parser.add_argument("--multiagent", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
     
 
     args = parser.parse_args()
@@ -108,7 +112,9 @@ def main() -> None:
     if args.eval:
         print("Opción eval seleccionada ...")
         ejecutar_evaluacion()
-    
+    if args.multiagent:
+        print("Opción multiagent seleccionada ...")
+        ejecutar_opcion_multiagent()
 
 if __name__ == "__main__":
     main()
