@@ -1,10 +1,17 @@
 # PB2-MULTIAGENTE-TARIFAS-ATM-BCN
 
+Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula el tiempo que tardará en llegar un convoy del Metro a una estación en tiempo real.
+
 ## API https://developer.tmb.cat/
 
 * Se utilizará la API de https://developer.tmb.cat/
 * Se requiere un app_id y un app_key.
 * Para más información visitar https://developer.tmb.cat/docs/getting-started
+
+## Ejecución 
+
+python main.py --multiagente                  # Ejecuta el workflow del multiagente por CLI
+
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
@@ -89,33 +96,34 @@ PB-RAG-ASISTENTE-TARIFAS-ATM-BCN/
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
-├── main.py                   # CLI: prepare / index / query / ask.
-├── app.py                    # Streamlit.
-├── assets/                   
-│   └── plano_ATM.jpg         # Plano para la herramienta
-├── common/                   # Carpeta donde guardamos ficheros comunes como comfig o utils.
-│   ├── config.py             # Se definen parametros generales del sistema.
-│   ├── gemini_auth.py        # Carga de API key de gemini.
-│   └── utils.py              # Funciones genéricas auxiliares y reutilizables.
-├── rag/                      # Carpeta donde guardamos los ficheros de la capa de negocio del RAG.
-│   ├── pipeline.py           # Orquestador de la ingesta y otras llamadas.
-│   ├── load.py               # Revisa los ficheros del corpues y lo carga con metadatos.
-│   ├── chunk.py              # Construye los chunks
-│   ├── embed.py              # Genera el embedding
-│   ├── index.py              # Genera el indice de ChromaDB
-│   ├── retrieve.py           # Embedding de la consulta
-│   ├── clean.py              # Limpieza de documentos. Podría estar en utils.py
-│   ├── context.py            # Formatea contexto. Podría estar en utils.py
-│   ├── eval_retrieval.py     # Para la opción --eval
-│   ├── prompts.py            # Construye el prompt 
-│   └── generate.py           # Llama al modelo para el RAG.
-├── data/                     # Corpus del RAG
-├── entregables/              # informe final.
-│   └── informe_decisiones.md
-├── output/                   # Ficheros generados entre ellos el indice de chromaDB
-├── queries/                  # preguntas de evaluación
-└── services/                 # Carpeta donde se encuentras los servicios que llamara Streamlit u otros.
-    └── rag_service.py        # Servicios relacionados con RAG. 
+├── main.py                     # CLI: prepare / index / query / ask.
+├── app.py                      # Streamlit.
+├── assets/                     
+│   └── plano_ATM.jpg           # Plano para la herramienta
+├── common/                     # Carpeta donde guardamos ficheros comunes como comfig o utils.
+│   ├── config.py               # Se definen parametros generales del sistema.
+│   ├── gemini_auth.py          # Carga de API key de gemini.
+│   └── utils.py                # Funciones genéricas auxiliares y reutilizables.
+├── rag/                        # Carpeta donde guardamos los ficheros de la capa de negocio del RAG.
+│   ├── pipeline.py             # Orquestador de la ingesta y otras llamadas.
+│   ├── load.py                 # Revisa los ficheros del corpues y lo carga con metadatos.
+│   ├── chunk.py                # Construye los chunks
+│   ├── embed.py                # Genera el embedding
+│   ├── index.py                # Genera el indice de ChromaDB
+│   ├── retrieve.py             # Embedding de la consulta
+│   ├── clean.py                # Limpieza de documentos. Podría estar en utils.py
+│   ├── context.py              # Formatea contexto. Podría estar en utils.py
+│   ├── eval_retrieval.py       # Para la opción --eval
+│   ├── prompts.py              # Construye el prompt 
+│   └── generate.py             # Llama al modelo para el RAG.
+├── data/                       # Corpus del RAG
+├── entregables/                # informe final.
+│   └── informe_decisiones.md 
+├── output/                     # Ficheros generados entre ellos el indice de chromaDB
+├── queries/                    # preguntas de evaluación
+└── services/                   # Carpeta donde se encuentras los servicios que llamara Streamlit u otros.
+    ├── multiagente_service.py  # Servicios que ejecutar el multiagente. 
+    └── rag_service.py          # Servicios relacionados con RAG. 
 
 
 ```
