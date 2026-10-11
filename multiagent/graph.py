@@ -19,6 +19,10 @@ from langgraph.graph import END, START, StateGraph
 from common.config import MAX_STEPS_DEFAULT, MAX_ITER
 from multiagent.llm import get_llm
 
+from multiagent.tools import TOOLS, ejecutar_tool
+
+
+
 def _acumular(actual: list, nuevo: list) -> list:
     """Reducer de LangGraph: concatena listas (no pisa el valor anterior)."""
     return (actual or []) + (nuevo or [])
@@ -42,6 +46,10 @@ class EstadoGrafo(TypedDict):
 
 
 OPCIONES = ("tarifas", "zonas", "tiempos", "recorridos", "sintetizar", "FINISH")
+
+def _preview(texto: str, n: int = 120) -> str:
+    t = (texto or "").replace("\n", " ").strip()
+    return t if len(t) <= n else t[: n - 1] + "…"
 
 def _texto_llm(content: Any) -> str:
     """Normaliza ai.content (str o lista de bloques Gemini) a texto plano."""
@@ -72,6 +80,54 @@ def _parse_plan(texto: str) -> list[str]:
         if s.startswith(("-", "•", "*")):
             items.append(s.lstrip("-•* ").strip())
     return [i for i in items if i]
+
+
+def _ejecutar_con_tools(
+    system: str,
+    user: str,
+    max_steps: int,
+) -> tuple[str, list[dict[str, Any]]]:
+    """Mini-bucle agent↔tools dentro de un especialista.
+
+    El LLM puede pedir tools; Python las ejecuta (allowlist).
+    Se repite hasta que haya texto final o se agote max_steps.
+    """
+    llm = get_llm().bind_tools(TOOLS)
+    messages: list = [SystemMessage(content=system), HumanMessage(content=user)]
+    traza: list[dict[str, Any]] = []
+    texto = ""
+
+    for paso in range(1, max(1, max_steps) + 1):
+        ai: AIMessage = llm.invoke(messages)
+        messages.append(ai)
+        calls = getattr(ai, "tool_calls", None) or []
+        if not calls:
+            # Sin tool_calls → el modelo ya respondió en texto
+            texto = _texto_llm(ai.content)
+            break
+        for call in calls:
+            nombre = call.get("name") or ""
+            args = dict(call.get("args") or {})
+            resultado = ejecutar_tool(nombre, args)
+            status = "blocked" if "no está permitida" in resultado else (
+                "error" if resultado.startswith("Error") else "ok"
+            )
+            traza.append(
+                {
+                    "step": paso,
+                    "tool": nombre,
+                    "args": args,
+                    "status": status,
+                    "preview": _preview(resultado),
+                }
+            )
+            messages.append(
+                ToolMessage(content=resultado, tool_call_id=call.get("id") or nombre)
+            )
+    else:
+        texto = texto or "He parado por max_steps en el especialista."
+
+    return texto, traza
 
 def _fallback_siguiente(estado: EstadoGrafo) -> str:
     """Si el LLM falla o responde mal: reglas deterministas en Python."""
@@ -125,7 +181,11 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
         f"notas_tiempos: {(estado.get('notas_tiempos') or '')}\n"
         f"respuesta: {(estado.get('respuesta') or '')}\n"
     )
+
+    print("="*10 + " PROMPT " + "="*10)
     print(prompt)
+    print("="*10 + " END PROMPT " + "="*10)
+    
     siguiente = _fallback_siguiente("FINISH")
     try:
         out = llm.invoke([HumanMessage(content=prompt)])
@@ -143,73 +203,76 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
         "log": [f"iter {it}: supervisor → {siguiente}"],
     }
 
-# RMO: PENDIENTE REVISAR
+
 def nodo_tarifas(estado: EstadoGrafo) -> dict:
-    """Genera notas sobre tarifas según el pedido."""
-    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    llm = get_llm()
-    prompt = (
-        "Genera notas sobre tarifas según el pedido.\n\n"
-        f"Pedido: {estado.get('pedido')}\n"
-        f"Notas previas: {estado.get('notas_tarifas') or '(nada)'}\n"
+    """Especialista: Responde sobre tarifas y condiciones de uso (puede usar tools). No cierra el plan."""
+    max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
+    system = (
+        "Eres el especialista en TARIFAS y CONDICIONES DE USO de la red ATM." \
+        "Usa tools si ayudan (principalmente rag_ask_tarifas). " \
+        "Escribe notas cortas en español (no el plan final)."
     )
-    out = llm.invoke([HumanMessage(content=prompt)])
-    texto = _texto_llm(out.content)
+    user = (
+        f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
+        "Devuelve solo las notas de tarifas o condiciones de uso."
+    )
+    texto, traza = _ejecutar_con_tools(system, user, max_steps)
     return {
         "notas_tarifas": texto,
-        "log": ["tarifas: notas generadas"],
+        "traza_tools": traza,
+        "log": ["tarifas: notas listas"],
     }
 
 # RMO: PENDIENTE REVISAR
 def nodo_zonas(estado: EstadoGrafo) -> dict:
     """Genera notas sobre zonas según el pedido."""
     print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    llm = get_llm()
-    prompt = (
-        "Genera notas sobre zonas según el pedido.\n\n"
-        f"Pedido: {estado.get('pedido')}\n"
-        f"Notas previas: {estado.get('notas_zonas') or '(nada)'}\n"
-    )
-    out = llm.invoke([HumanMessage(content=prompt)])
-    texto = _texto_llm(out.content)
-    return {
-        "notas_zonas": texto,
-        "log": ["zonas: notas generadas"],
-    }
+    #llm = get_llm()
+    #prompt = (
+    #    "Genera notas sobre zonas según el pedido.\n\n"
+    #    f"Pedido: {estado.get('pedido')}\n"
+    #    f"Notas previas: {estado.get('notas_zonas') or '(nada)'}\n"
+    #)
+    #out = llm.invoke([HumanMessage(content=prompt)])
+    #texto = _texto_llm(out.content)
+    #return {
+    #    "notas_zonas": texto,
+    #    "log": ["zonas: notas generadas"],
+    #}
 
 # RMO: PENDIENTE REVISAR
 def nodo_recorridos(estado: EstadoGrafo) -> dict:
     """Genera notas sobre recorridos según el pedido."""
     print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    llm = get_llm()
-    prompt = (
-        "Genera notas sobre recorridos según el pedido.\n\n"
-        f"Pedido: {estado.get('pedido')}\n"
-        f"Notas previas: {estado.get('notas_recorridos') or '(nada)'}\n"
-    )
-    out = llm.invoke([HumanMessage(content=prompt)])
-    texto = _texto_llm(out.content)
-    return {
-        "notas_recorridos": texto,
-        "log": ["recorridos: notas generadas"],
-    }
+    #llm = get_llm()
+    #prompt = (
+    #    "Genera notas sobre recorridos según el pedido.\n\n"
+    #    f"Pedido: {estado.get('pedido')}\n"
+    #    f"Notas previas: {estado.get('notas_recorridos') or '(nada)'}\n"
+    #)
+    #out = llm.invoke([HumanMessage(content=prompt)])
+    #texto = _texto_llm(out.content)
+    #return {
+    #    "notas_recorridos": texto,
+    #    "log": ["recorridos: notas generadas"],
+    #}
 
 # RMO: PENDIENTE REVISAR
 def nodo_tiempos(estado: EstadoGrafo) -> dict:
     """Genera notas sobre tiempos según el pedido."""
     print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    llm = get_llm()
-    prompt = (
-        "Genera notas sobre tiempos según el pedido.\n\n"
-        f"Pedido: {estado.get('pedido')}\n"
-        f"Notas previas: {estado.get('notas_tiempos') or '(nada)'}\n"
-    )
-    out = llm.invoke([HumanMessage(content=prompt)])
-    texto = _texto_llm(out.content)
-    return {
-        "notas_tiempos": texto,
-        "log": ["tiempos: notas generadas"],
-    }
+    #llm = get_llm()
+    #prompt = (
+    #    "Genera notas sobre tiempos según el pedido.\n\n"
+    #    f"Pedido: {estado.get('pedido')}\n"
+    #    f"Notas previas: {estado.get('notas_tiempos') or '(nada)'}\n"
+    #)
+    #out = llm.invoke([HumanMessage(content=prompt)])
+    #texto = _texto_llm(out.content)
+    #return {
+    #    "notas_tiempos": texto,
+    #    "log": ["tiempos: notas generadas"],
+    #}
 
 def nodo_sintetizar(estado: EstadoGrafo) -> dict:
     """Une las notas en respuesta + plan (viñetas). Deja el flujo listo para HITL."""
