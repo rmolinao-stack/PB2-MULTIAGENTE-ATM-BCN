@@ -25,7 +25,7 @@ import argparse
 import json
 
 from multiagent.state import crear_estado
-from multiagent.agent import nuevo_thread_id
+from multiagent.agent import aprobar_plan, nuevo_thread_id, procesar_turno
 from rag.pipeline import ejecutar_ingesta
 from rag.embed import ejecutar_embeddings
 from rag.index import ejecutar_indexacion
@@ -65,7 +65,61 @@ def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: in
     print("Ejecutando multiagente en modo interactivo...")
     estado = crear_estado("")
     tid = nuevo_thread_id()
-    # Aquí se llamaría a la función correspondiente del multiagente en modo interactivo
+    
+    print(f"Modo multiagente interactivo | thread_id={tid}")
+    print("Para terminar teclar: 'salir', 'exit' o 'quit'. Si hay HITL: 'aprobar' / 'rechazar'.\n")
+    
+    for _ in range(max_turns):
+              
+        if estado.get("pendiente_hitl"):
+            print("HITL: plan pendiente. Escribe aprobar / rechazar")
+            for item in estado.get("plan") or []:
+                print(f"  - {item}")
+        mensaje = input("Tú: ").strip()
+        
+        if not mensaje or mensaje.lower() in {"salir", "exit", "quit"}:
+            break
+        
+        if mensaje.lower() in {"aprobar", "approve", "si", "sí", "yes"}:
+            if estado.get("pendiente_hitl"):
+                estado = aprobar_plan(tid, True, estado)
+            else:
+                print("(No hay plan pendiente)")
+                continue
+        elif mensaje.lower() in {"rechazar", "reject", "no"}:
+            if estado.get("pendiente_hitl"):
+                estado = aprobar_plan(tid, False, estado)
+            else:
+                print("(No hay plan pendiente)")
+                continue
+        else:
+            estado = procesar_turno(estado, mensaje, tid, max_steps=max_steps)
+        
+        print("Agente:", estado.get("respuesta") or "(sin respuesta)")
+        
+        if estado.get("plan"):
+            print("Plan:", estado["plan"])
+        
+        if estado.get("log"):
+            print("Log:", estado["log"][-5:])
+        
+        print(
+            "done:",
+            estado.get("done"),
+            "| hitl:",
+            estado.get("pendiente_hitl"),
+            "| error:",
+            estado.get("error"),
+        )
+        
+        print()
+        
+        if estado.get("done") or estado.get("error"):
+            break
+    
+    estado["thread_id"] = tid
+    
+    return estado
 
 def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
     print("Ejecutando multiagente en modo demo...")
