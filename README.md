@@ -36,6 +36,8 @@ A continuación se describen los nodos:
 * recorridos: Especialistas en definir un recorrido dentro de la red de ATM. Principalmente usará el asset plano_ATM.jpg
 * tiempos: Especialista en definir cuanto tardará un convoy de TMB en llegar a una estación.
 
+## tools 
+
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
 

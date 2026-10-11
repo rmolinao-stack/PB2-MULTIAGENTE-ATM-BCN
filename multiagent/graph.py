@@ -65,6 +65,14 @@ def _texto_llm(content: Any) -> str:
         return "\n".join(p.strip() for p in partes if p and str(p).strip()).strip()
     return str(content).strip()
 
+def _parse_plan(texto: str) -> list[str]:
+    items: list[str] = []
+    for line in (texto or "").splitlines():
+        s = line.strip()
+        if s.startswith(("-", "•", "*")):
+            items.append(s.lstrip("-•* ").strip())
+    return [i for i in items if i]
+
 def _fallback_siguiente(estado: EstadoGrafo) -> str:
     """Si el LLM falla o responde mal: reglas deterministas en Python."""
     if not (estado.get("notas_tarifas") or "").strip():
@@ -119,15 +127,15 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
     )
     print(prompt)
     siguiente = _fallback_siguiente("FINISH")
-    #try:
-    #    out = llm.invoke([HumanMessage(content=prompt)])
-    #    raw = _texto_llm(out.content)
-    #    palabra = re.findall(r"[A-Za-z_]+", raw)
-    #    siguiente = (palabra[0] if palabra else "").strip()
-    #    if siguiente not in OPCIONES:
-    #        siguiente = _fallback_siguiente(estado)
-    #except Exception:
-    #    siguiente = _fallback_siguiente(estado)
+    try:
+        out = llm.invoke([HumanMessage(content=prompt)])
+        raw = _texto_llm(out.content)
+        palabra = re.findall(r"[A-Za-z_]+", raw)
+        siguiente = (palabra[0] if palabra else "").strip()
+        if siguiente not in OPCIONES:
+            siguiente = _fallback_siguiente(estado)
+    except Exception:
+        siguiente = _fallback_siguiente(estado)
 
     return {
         "iteracion": it,
@@ -135,45 +143,200 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
         "log": [f"iter {it}: supervisor → {siguiente}"],
     }
 
+# RMO: PENDIENTE REVISAR
+def nodo_tarifas(estado: EstadoGrafo) -> dict:
+    """Genera notas sobre tarifas según el pedido."""
+    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
+    llm = get_llm()
+    prompt = (
+        "Genera notas sobre tarifas según el pedido.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Notas previas: {estado.get('notas_tarifas') or '(nada)'}\n"
+    )
+    out = llm.invoke([HumanMessage(content=prompt)])
+    texto = _texto_llm(out.content)
+    return {
+        "notas_tarifas": texto,
+        "log": ["tarifas: notas generadas"],
+    }
+
+# RMO: PENDIENTE REVISAR
+def nodo_zonas(estado: EstadoGrafo) -> dict:
+    """Genera notas sobre zonas según el pedido."""
+    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
+    llm = get_llm()
+    prompt = (
+        "Genera notas sobre zonas según el pedido.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Notas previas: {estado.get('notas_zonas') or '(nada)'}\n"
+    )
+    out = llm.invoke([HumanMessage(content=prompt)])
+    texto = _texto_llm(out.content)
+    return {
+        "notas_zonas": texto,
+        "log": ["zonas: notas generadas"],
+    }
+
+# RMO: PENDIENTE REVISAR
+def nodo_recorridos(estado: EstadoGrafo) -> dict:
+    """Genera notas sobre recorridos según el pedido."""
+    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
+    llm = get_llm()
+    prompt = (
+        "Genera notas sobre recorridos según el pedido.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Notas previas: {estado.get('notas_recorridos') or '(nada)'}\n"
+    )
+    out = llm.invoke([HumanMessage(content=prompt)])
+    texto = _texto_llm(out.content)
+    return {
+        "notas_recorridos": texto,
+        "log": ["recorridos: notas generadas"],
+    }
+
+# RMO: PENDIENTE REVISAR
+def nodo_tiempos(estado: EstadoGrafo) -> dict:
+    """Genera notas sobre tiempos según el pedido."""
+    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
+    llm = get_llm()
+    prompt = (
+        "Genera notas sobre tiempos según el pedido.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Notas previas: {estado.get('notas_tiempos') or '(nada)'}\n"
+    )
+    out = llm.invoke([HumanMessage(content=prompt)])
+    texto = _texto_llm(out.content)
+    return {
+        "notas_tiempos": texto,
+        "log": ["tiempos: notas generadas"],
+    }
+
+def nodo_sintetizar(estado: EstadoGrafo) -> dict:
+    """Une las notas en respuesta + plan (viñetas). Deja el flujo listo para HITL."""
+    llm = get_llm()
+    prompt = (
+        "Une las notas en un plan de rutas, tarifas y zonas de la red ATM y tiempos de llegada de trenes a las estaciones de Metro (TMB).\n"
+        "Incluye al menos 2 opciones como viñetas que empiecen por '- '.\n"
+        "Una intro de 1-2 frases y luego las viñetas.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Tarifas: {estado.get('notas_tarifas') or '(nada)'}\n"
+        f"Zonas: {estado.get('notas_zonas') or '(nada)'}\n"
+        f"Recorridos: {estado.get('notas_recorridos') or '(nada)'}\n"
+        f"Tiempos: {estado.get('notas_tiempos') or '(nada)'}\n"
+    )
+    out = llm.invoke([HumanMessage(content=prompt)])
+    texto = _texto_llm(out.content)
+    plan = _parse_plan(texto)
+    if len(plan) < 2:
+        # Fallback mínimo para poder pausar en HITL con algo que mostrar
+        plan = [
+            p
+            for p in (
+                (estado.get("notas_tarifas") or "").split(".")[0].strip(),
+                (estado.get("notas_zonas") or "").split(".")[0].strip(),
+                (estado.get("notas_recorridos") or "").split(".")[0].strip(),
+                (estado.get("notas_tiempos") or "").split(".")[0].strip(),
+            )
+            if p
+        ]
+        if len(plan) < 2:
+            plan = ["Plan ruta, tarifa, zonas o tiempo según preferencias", "Cierre"]
+        texto = texto or "Plan propuesto:\n" + "\n".join(f"- {p}" for p in plan)
+    return {
+        "respuesta": texto,
+        "plan": plan,
+        "pendiente_hitl": True,
+        "log": ["sintetizar: plan listo (pendiente HITL)"],
+    }
+
+def nodo_aplicar(estado: EstadoGrafo) -> dict:
+    """Cierra o resetea según plan_aprobado.
+
+    Solo se ejecuta DESPUÉS de la decisión humana: el grafo pausa con
+    interrupt_before; el cliente hace update_state + invoke(None).
+    """
+    if estado.get("plan_aprobado"):
+        prev = (estado.get("respuesta") or "").strip()
+        cierre = "Plan aprobado. ¡Listo!"
+        return {
+            "done": True,
+            "pendiente_hitl": False,
+            "respuesta": f"{prev}\n\n{cierre}".strip() if prev else cierre,
+            "log": ["aplicar: plan aprobado"],
+        }
+    return {
+        "done": False,
+        "pendiente_hitl": False,
+        "plan_aprobado": False,
+        "plan": [],
+        "respuesta": (
+            "Plan rechazado. Dime qué cambiar (ruta, tarifa, zona, estación) "
+            "y proponemos otro."
+        ),
+        "notas_tarifas": "",
+        "notas_zonas": "",
+        "notas_recorridos": "",
+        "notas_tiempos": "",
+        "log": ["aplicar: plan rechazado"],
+    }
+
+
+def _router_supervisor(
+    estado: EstadoGrafo,
+) -> Literal["tarifas", "zonas", "recorridos", "tiempos", "sintetizar", "aplicar"]:
+    """Lee estado['siguiente'] y elige el edge.
+
+    FINISH → nodo aplicar (donde está el interrupt HITL).
+    Si aún no hay plan/respuesta → sintetizar antes de pausar.
+    """
+    sig = (estado.get("siguiente") or "").strip()
+    if sig == "FINISH":
+        if not (estado.get("plan") or estado.get("respuesta")):
+            return "sintetizar"
+        return "aplicar"
+    if sig in ("tarifas", "zonas", "recorridos", "tiempos", "sintetizar"):
+        return sig  # type: ignore[return-value]
+    return "sintetizar"
+
 def build_graph():
     """Monta el grafo: especialistas vuelven al supervisor; HITL ante aplicar."""
 
     grafo = StateGraph(EstadoGrafo)
     grafo.add_node("supervisor", nodo_supervisor)
-    #grafo.add_node("tarifas", nodo_tarifas)
-    #grafo.add_node("zonas", nodo_zonas)
-    #grafo.add_node("tiempos", nodo_tiempos)
-    #grafo.add_node("recorridos", nodo_recorridos)
-    #grafo.add_node("sintetizar", nodo_sintetizar)
-    #grafo.add_node("aplicar", nodo_aplicar)
+    grafo.add_node("tarifas", nodo_tarifas)
+    grafo.add_node("zonas", nodo_zonas)
+    grafo.add_node("tiempos", nodo_tiempos)
+    grafo.add_node("recorridos", nodo_recorridos)
+    grafo.add_node("sintetizar", nodo_sintetizar)
+    grafo.add_node("aplicar", nodo_aplicar)
 
     grafo.add_edge(START, "supervisor")
-    #grafo.add_conditional_edges(
-    #    "supervisor",
-    #    _router_supervisor,
-    #    {
-    #        #"tarifas": "tarifas",
-    #        #"zonas": "zonas",
-    #        #"tiempos": "tiempos",
-    #        #"recorridos": "recorridos",
-    #        #"sintetizar": "sintetizar",
-    #        #"aplicar": "aplicar",
-    #    },
-    #)
+    grafo.add_conditional_edges(
+        "supervisor",
+        _router_supervisor,
+        {
+            "tarifas": "tarifas",
+            "zonas": "zonas",
+            "tiempos": "tiempos",
+            "recorridos": "recorridos",
+            "sintetizar": "sintetizar",
+            "aplicar": "aplicar",
+        },
+    )
     # Tras cada especialista, el control vuelve al supervisor
-    #grafo.add_edge("tarifas", "supervisor")
-    #grafo.add_edge("zonas", "supervisor")    
-    #grafo.add_edge("tiempos", "supervisor")
-    #grafo.add_edge("recorridos", "supervisor")
-    #grafo.add_edge("sintetizar", "supervisor")
-    #grafo.add_edge("aplicar", END)
+    grafo.add_edge("tarifas", "supervisor")
+    grafo.add_edge("zonas", "supervisor")    
+    grafo.add_edge("tiempos", "supervisor")
+    grafo.add_edge("recorridos", "supervisor")
+    grafo.add_edge("sintetizar", "supervisor")
+    grafo.add_edge("aplicar", END)
 
-    #return grafo.compile(
-    #    checkpointer=MemorySaver(),  # checkpoints por thread_id
-    #    interrupt_before=["aplicar"],  # pausa HITL antes de este nodo
-    #)
+    return grafo.compile(
+        checkpointer=MemorySaver(),  # checkpoints por thread_id
+        interrupt_before=["aplicar"],  # pausa HITL antes de este nodo
+    )
 
-    return grafo.compile()
+   
 
 _APP = None
 
