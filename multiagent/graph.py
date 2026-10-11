@@ -1,7 +1,7 @@
 """Grafo multiagente: supervisor ↔ especialistas + HITL.
 
 Flujo:
-  START → supervisor ──┬── tarifas_zonas ────┐
+  START → supervisor ──┬── tarifas_zonas ──────┐
                        ├── tiempos_TMB ────────┼──► supervisor → …
                        ├── recorridos ─────────┤
                        └── sintetizar ─────────┘

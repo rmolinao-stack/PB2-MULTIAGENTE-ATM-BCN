@@ -24,6 +24,8 @@ App Streamlit: streamlit run app.py
 import argparse
 import json
 
+from multiagent.state import crear_estado
+from multiagent.agent import nuevo_thread_id
 from rag.pipeline import ejecutar_ingesta
 from rag.embed import ejecutar_embeddings
 from rag.index import ejecutar_indexacion
@@ -61,6 +63,8 @@ def ejecutar_opcion_ask(pregunta: str, top_k: int | None) -> None:
 
 def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: int | None) -> None:
     print("Ejecutando multiagente en modo interactivo...")
+    estado = crear_estado("")
+    tid = nuevo_thread_id()
     # Aquí se llamaría a la función correspondiente del multiagente en modo interactivo
 
 def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
