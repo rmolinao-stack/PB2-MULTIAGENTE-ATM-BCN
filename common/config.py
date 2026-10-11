@@ -45,8 +45,14 @@ MAX_TURNS_DEFAULT = 6
 MAX_ITER = 8
 
 DEMO_MENSAJES = [
+    #(
+    #    "¿Cual es el billete de 10 viajes integrado?"
+    #),
     (
-        "¿Cual es el billete de 10 viajes integrado?"
+        "¿A que zona pertenece Alella?"
     ),
+    #(
+    #    "¿Qué zonas de población pertenecen a la red de ATM de Barcelona?"
+    #),
 ]
 

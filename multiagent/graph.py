@@ -21,8 +21,6 @@ from multiagent.llm import get_llm
 
 from multiagent.tools import TOOLS, ejecutar_tool
 
-
-
 def _acumular(actual: list, nuevo: list) -> list:
     """Reducer de LangGraph: concatena listas (no pisa el valor anterior)."""
     return (actual or []) + (nuevo or [])
@@ -185,8 +183,7 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
     print("="*10 + " PROMPT " + "="*10)
     print(prompt)
     print("="*10 + " END PROMPT " + "="*10)
-    
-    siguiente = _fallback_siguiente("FINISH")
+
     try:
         out = llm.invoke([HumanMessage(content=prompt)])
         raw = _texto_llm(out.content)
@@ -225,20 +222,23 @@ def nodo_tarifas(estado: EstadoGrafo) -> dict:
 
 # RMO: PENDIENTE REVISAR
 def nodo_zonas(estado: EstadoGrafo) -> dict:
-    """Genera notas sobre zonas según el pedido."""
-    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    #llm = get_llm()
-    #prompt = (
-    #    "Genera notas sobre zonas según el pedido.\n\n"
-    #    f"Pedido: {estado.get('pedido')}\n"
-    #    f"Notas previas: {estado.get('notas_zonas') or '(nada)'}\n"
-    #)
-    #out = llm.invoke([HumanMessage(content=prompt)])
-    #texto = _texto_llm(out.content)
-    #return {
-    #    "notas_zonas": texto,
-    #    "log": ["zonas: notas generadas"],
-    #}
+    """Especialista: Responde las zonas a la que pertenecen las poblaciones (puede usar tools). No cierra el plan."""
+    max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
+    system = (
+        "Eres el especialista en ZONAS de la red ATM." \
+        "Usa tools si ayudan (principalmente zonas_poblacion_text, pero puedes usar otras si es necesario). " \
+        "Escribe notas cortas en español (no el plan final)."
+    )
+    user = (
+        f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
+        "Devuelve solo las notas sobre las zonas a las que pertenecen las poblaciones."
+    )
+    texto, traza = _ejecutar_con_tools(system, user, max_steps)
+    return {
+        "notas_zonas": texto,
+        "traza_tools": traza,
+        "log": ["zonas: notas listas"],
+    }
 
 # RMO: PENDIENTE REVISAR
 def nodo_recorridos(estado: EstadoGrafo) -> dict:

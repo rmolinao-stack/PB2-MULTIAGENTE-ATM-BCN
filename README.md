@@ -15,7 +15,7 @@ python main.py --agente-interactivo           # Ejecuta el workflow del multiage
 python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
 python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
 python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
-python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
+python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 ```
 
 ## Workflow LangGraph
@@ -37,6 +37,14 @@ A continuación se describen los nodos:
 * tiempos: Especialista en definir cuanto tardará un convoy de TMB en llegar a una estación.
 
 ## tools 
+* rag_ask_tarifas: Tool que pregunta al RAG sobre tarifas.
+  * Tipo de tool: RAG Completo
+* zonas_poblacion_text: Tool que revisa si en un texto aparece una o varias poblaciones de incluidas en la red ATM y devuelve la zona, el sector y si es tarifa metropolitana, de cada una de las poblaciones encontradas.
+  * Tipo de tool: Herramienta auxiliar determinista (elaboración propia).
+  * Observaciones: Se ha reaprovechado la implementación de extracción de zonas del RAG del csv de municipios.
+
+## Arreglos proyecto anterior:
+* En requirements: pandas>=2.0.0, <3.0.0
 
 ## Decisiones técnicas
 

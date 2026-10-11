@@ -16,7 +16,7 @@ Uso CLI para workflow LangGraph:
   python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
   python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
   python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
-  python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
+  python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 
 App Streamlit: streamlit run app.py
 """

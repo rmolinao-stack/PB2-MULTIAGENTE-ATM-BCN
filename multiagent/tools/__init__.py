@@ -5,9 +5,11 @@ Si el modelo pide otra, ejecutar_tool la bloquea.
 """
 
 from multiagent.tools.rag_tarifas import rag_ask_tarifas
+from multiagent.tools.zonas import zonas_poblacion_text
 
 TOOLS = [
     rag_ask_tarifas,
+    zonas_poblacion_text,
 ]
 
 TOOL_BY_NAME = {t.name: t for t in TOOLS}
