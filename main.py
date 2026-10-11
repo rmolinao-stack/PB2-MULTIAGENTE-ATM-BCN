@@ -25,7 +25,7 @@ import argparse
 import json
 
 from multiagent.state import crear_estado
-from multiagent.agent import aprobar_plan, nuevo_thread_id, procesar_turno
+from multiagent.agent import aprobar_plan, nuevo_thread_id, procesar_turno, run_demo
 from rag.pipeline import ejecutar_ingesta
 from rag.embed import ejecutar_embeddings
 from rag.index import ejecutar_indexacion
@@ -123,8 +123,13 @@ def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: in
 
 def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
     print("Ejecutando multiagente en modo demo...")
-    print("="*20 + " [TODO]"*5 + " Implementar multiagente_demo " + "[TODO] "*5 + "="*20)
     # Aquí se llamaría a la función correspondiente del multiagente en modo demo
+
+    run_demo(
+        max_turns=max_turns,
+        max_steps=max_steps,
+        auto_aprobar=not sin_auto_aprobar,
+    )
 
 def main() -> None:
     parser = argparse.ArgumentParser(

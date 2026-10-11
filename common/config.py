@@ -34,6 +34,7 @@ TOP_K = 5 # Número de resultados a recuperar en la búsqueda (retrieval)
 GEMINI_MODEL ="gemini-3.1-flash-lite-preview"
 
 GENERATION_TEMPERATURE = 0.2
+AGENT_TEMPERATURE = 0.2
 
 # --- Evaluación ---
 QUERIES_EVAL_JSON = Path(__file__).parent.parent / "queries" / "preguntas_eval.json"
@@ -43,5 +44,9 @@ MAX_STEPS_DEFAULT = 4
 MAX_TURNS_DEFAULT = 6
 MAX_ITER = 8
 
-#
+DEMO_MENSAJES = [
+    (
+        "¿Cual es el billete de 10 viajes integrado?"
+    ),
+]
 

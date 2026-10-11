@@ -11,8 +11,6 @@ Reglas:
 - No inventes eventos, fechas ni datos que no estén en el contexto.
 - No eres un asistente de rutas, solo de tarifas y abonos de la red ATM de Barcelona.
 """
-#- UNICAMENTE si te preguntan sobre la como ir de una población a otra y por qué zonas pasa debes redirigir  
-#a la web de cálculo de zonas: https://www.atm.cat/es/titols-tarifes/sistema-de-transport/mapa-de-la-zonificacio
 
 import re
 import pandas as pd

@@ -14,8 +14,9 @@ def crear_estado(pedido: str = "") -> dict[str, Any]:
         "objetivo": "Planifica rutas y tarifas dentro de la red de ATM. Calcula el tiempo en llegar el próximo metro de TMB" ,
         "pedido_original": pedido,
         "pedido": pedido,
-        "notas_tarifas_zonas": "",
-        "notas_tiempos_TMB": "",
+        "notas_tarifas": "",
+        "notas_zonas": "",
+        "notas_tiempos": "",
         "notas_recorridos": "",
         "respuesta": "",
         "plan": [],
@@ -41,8 +42,9 @@ def estado_desde_grafo(resultado: dict[str, Any], base: dict[str, Any] | None = 
     nuevo = copy.deepcopy(base) if base else crear_estado()
     for clave in (
         "pedido",
-        "notas_tarifas_zonas",
-        "notas_tiempos_TMB",
+        "notas_tarifas",
+        "notas_zonas",
+        "notas_tiempos",
         "notas_recorridos",
         "respuesta",
         "plan",

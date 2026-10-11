@@ -1,18 +1,23 @@
 """Grafo multiagente: supervisor ↔ especialistas + HITL.
 
 Flujo:
-  START → supervisor ──┬── tarifas_zonas ──────┐
-                       ├── tiempos_TMB ────────┼──► supervisor → …
-                       ├── recorridos ─────────┤
-                       └── sintetizar ─────────┘
-                                  │
+START → supervisor  ──┬── tarifas ──────────┐
+                      ├── zonas ────────────┼──► supervisor → …
+                      ├── recorridos ───────┤
+                      ├── tiempos ──────────┤
+                      └── sintetizar ───────┘
+                              │
                      FINISH → aplicar (interrupt_before) → END
-
-Stack: LangChain (ChatGoogleGenerativeAI + @tool) + LangGraph (MemorySaver).
 """
-
+import re
 from typing import Annotated, Any, Literal, TypedDict
-from common.config import MAX_STEPS_DEFAULT
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, START, StateGraph
+
+from common.config import MAX_STEPS_DEFAULT, MAX_ITER
+from multiagent.llm import get_llm
 
 def _acumular(actual: list, nuevo: list) -> list:
     """Reducer de LangGraph: concatena listas (no pisa el valor anterior)."""
@@ -20,12 +25,13 @@ def _acumular(actual: list, nuevo: list) -> list:
 
 class EstadoGrafo(TypedDict):
     pedido: str  # mensaje del usuario
-    notas_tarifas_zonas: str  # las escribe el especialista tarifas y zonas
-    notas_tiempos_TMB: str  # las escribe el especialista de tiempos de espera de metro de TMB
+    notas_tarifas: str  # las escribe el especialista tarifas
+    notas_zonas: str  # las escribe el especialista zonas
+    notas_tiempos: str  # las escribe el especialista de tiempos de espera de metro de TMB
     notas_recorridos: str  # las escribe el especialista recorridos que usará plano_ATM.jpg (equivalente a notas_vision)
     respuesta: str  # texto del plan (sintetizar / aplicar)
     plan: list  # viñetas del plan (≥2 para HITL)
-    siguiente: str  # lo elige el supervisor: tarifas_zonas|tiempos_TMB|recorridos|sintetizar|FINISH
+    siguiente: str  # lo elige el supervisor: tarifas|zonas|tiempos|recorridos|sintetizar|FINISH
     iteracion: int  # contador del supervisor (tope MAX_ITER)
     log: Annotated[list, _acumular]  # traza legible del orquestador
     traza_tools: Annotated[list, _acumular]  # tools usadas en los especialistas
@@ -35,15 +41,141 @@ class EstadoGrafo(TypedDict):
     pendiente_hitl: bool  # True mientras el grafo está pausado antes de aplicar
 
 
-OPCIONES = ("tarifas_zonas", "tiempos_TMB", "recorridos", "sintetizar", "FINISH")
+OPCIONES = ("tarifas", "zonas", "tiempos", "recorridos", "sintetizar", "FINISH")
+
+def _texto_llm(content: Any) -> str:
+    """Normaliza ai.content (str o lista de bloques Gemini) a texto plano."""
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content.strip()
+    if isinstance(content, list):
+        partes: list[str] = []
+        for bloque in content:
+            if isinstance(bloque, str):
+                partes.append(bloque)
+            elif isinstance(bloque, dict):
+                t = bloque.get("text") or bloque.get("content") or ""
+                if t:
+                    partes.append(str(t))
+            else:
+                t = getattr(bloque, "text", None)
+                if t:
+                    partes.append(str(t))
+        return "\n".join(p.strip() for p in partes if p and str(p).strip()).strip()
+    return str(content).strip()
+
+def _fallback_siguiente(estado: EstadoGrafo) -> str:
+    """Si el LLM falla o responde mal: reglas deterministas en Python."""
+    if not (estado.get("notas_tarifas") or "").strip():
+        return "tarifas"
+    if not (estado.get("notas_zonas") or "").strip():
+        return "zonas"
+    if not (estado.get("notas_tiempos") or "").strip():
+        return "tiempos"
+    if not (estado.get("notas_recorridos") or "").strip():
+        return "recorridos"
+    if not (estado.get("respuesta") or "").strip():
+        return "sintetizar"
+    return "FINISH"
+
+def nodo_supervisor(estado: EstadoGrafo) -> dict:
+    """Orquesta: no escribe el plan; solo elige el siguiente nodo (o FINISH).
+
+    MAX_ITER evita bucles infinitos supervisor ↔ especialistas.
+    """
+    it = int(estado.get("iteracion") or 0) + 1
+    if it >= MAX_ITER:
+        return {
+            "iteracion": it,
+            "siguiente": "FINISH",
+            "log": [f"iter {it}: supervisor → FINISH (MAX_ITER)"],
+        }
+
+    llm = get_llm(temperature=0)
+    prompt = (
+        "Eres el supervisor de un planificador de rutas, tarifas y zonas de la red ATM y tiempos de llegada de trenes a las estaciones de Metro (TMB).\n"
+        "Elige el siguiente rol:\n"
+        "- tarifas: tarifas, abonos y condiciones de uso para la red ATM de Barcelona.\n"
+        "- zonas: zona de la red ATM a la que pertenece una población.\n"
+        "- recorridos: rutas y recorridos dentro de la red ferrovial integrada en ATM (Rodalies, FGC, Metro y TRAM, excluyendo autobuses).\n"
+        "- tiempos: calcula el tiempo en llegar el próximo metro de TMB a una parada concreta.\n"
+        "- sintetizar: une notas en un plan final con viñetas\n"
+        "- FINISH: ya hay plan/respuesta lista\n"
+        "Responde SOLO una palabra: tarifas, zonas, recorridos, tiempos, sintetizar o FINISH.\n"
+        "Regla: sin notas_tarifas → tarifas; sin notas_zonas → zonas; sin notas_recorridos → recorridos; sin notas_tiempos → tiempos; "
+        "con todas y sin respuesta → sintetizar; con respuesta → FINISH.\n\n"
+        f"pedido: {estado.get('pedido')}\n"
+        #f"notas_tarifas: {(estado.get('notas_tarifas') or '')[:400]}\n"
+        #f"notas_zonas: {(estado.get('notas_zonas') or '')[:400]}\n"
+        #f"notas_recorridos: {(estado.get('notas_recorridos') or '')[:400]}\n"
+        #f"notas_tiempos: {(estado.get('notas_tiempos') or '')[:200]}\n"
+        #f"respuesta: {(estado.get('respuesta') or '')[:200]}\n"
+        f"notas_tarifas: {(estado.get('notas_tarifas') or '')}\n"
+        f"notas_zonas: {(estado.get('notas_zonas') or '')}\n"
+        f"notas_recorridos: {(estado.get('notas_recorridos') or '')}\n"
+        f"notas_tiempos: {(estado.get('notas_tiempos') or '')}\n"
+        f"respuesta: {(estado.get('respuesta') or '')}\n"
+    )
+    print(prompt)
+    siguiente = _fallback_siguiente("FINISH")
+    #try:
+    #    out = llm.invoke([HumanMessage(content=prompt)])
+    #    raw = _texto_llm(out.content)
+    #    palabra = re.findall(r"[A-Za-z_]+", raw)
+    #    siguiente = (palabra[0] if palabra else "").strip()
+    #    if siguiente not in OPCIONES:
+    #        siguiente = _fallback_siguiente(estado)
+    #except Exception:
+    #    siguiente = _fallback_siguiente(estado)
+
+    return {
+        "iteracion": it,
+        "siguiente": siguiente,
+        "log": [f"iter {it}: supervisor → {siguiente}"],
+    }
 
 def build_graph():
     """Monta el grafo: especialistas vuelven al supervisor; HITL ante aplicar."""
-    print("="*20 + " [TODO]"*5 + " Implementar build_graph " + "[TODO] "*5 + "="*20)
-    return None
+
+    grafo = StateGraph(EstadoGrafo)
+    grafo.add_node("supervisor", nodo_supervisor)
+    #grafo.add_node("tarifas", nodo_tarifas)
+    #grafo.add_node("zonas", nodo_zonas)
+    #grafo.add_node("tiempos", nodo_tiempos)
+    #grafo.add_node("recorridos", nodo_recorridos)
+    #grafo.add_node("sintetizar", nodo_sintetizar)
+    #grafo.add_node("aplicar", nodo_aplicar)
+
+    grafo.add_edge(START, "supervisor")
+    #grafo.add_conditional_edges(
+    #    "supervisor",
+    #    _router_supervisor,
+    #    {
+    #        #"tarifas": "tarifas",
+    #        #"zonas": "zonas",
+    #        #"tiempos": "tiempos",
+    #        #"recorridos": "recorridos",
+    #        #"sintetizar": "sintetizar",
+    #        #"aplicar": "aplicar",
+    #    },
+    #)
+    # Tras cada especialista, el control vuelve al supervisor
+    #grafo.add_edge("tarifas", "supervisor")
+    #grafo.add_edge("zonas", "supervisor")    
+    #grafo.add_edge("tiempos", "supervisor")
+    #grafo.add_edge("recorridos", "supervisor")
+    #grafo.add_edge("sintetizar", "supervisor")
+    #grafo.add_edge("aplicar", END)
+
+    #return grafo.compile(
+    #    checkpointer=MemorySaver(),  # checkpoints por thread_id
+    #    interrupt_before=["aplicar"],  # pausa HITL antes de este nodo
+    #)
+
+    return grafo.compile()
 
 _APP = None
-
 
 def get_app():
     global _APP
@@ -58,8 +190,9 @@ def config_hilo(thread_id: str) -> dict:
 def estado_inicial_grafo(pedido: str, max_steps: int | None = None) -> EstadoGrafo:
     return {
         "pedido": pedido,
-        "notas_tarifas_zonas": "",
-        "notas_tiempos_TMB": "",
+        "notas_tarifas": "",
+        "notas_zonas": "",
+        "notas_tiempos": "",
         "notas_recorridos": "",
         "respuesta": "",
         "plan": [],

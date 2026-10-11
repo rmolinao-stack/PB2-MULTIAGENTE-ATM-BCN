@@ -4,7 +4,9 @@ import uuid
 from typing import Any
 
 from multiagent.graph import config_hilo, estado_inicial_grafo, get_app, hay_interrupt
-from multiagent.state import estado_desde_grafo
+from multiagent.state import crear_estado, estado_desde_grafo
+
+from common.config import DEMO_MENSAJES, MAX_TURNS_DEFAULT
 
 def _marcar_hitl(estado: dict[str, Any], thread_id: str) -> dict[str, Any]:
     """Si el grafo está pausado ante aplicar, marca pendiente_hitl para la UI."""
@@ -108,3 +110,26 @@ def aprobar_plan(thread_id: str, aprobado: bool, estado: dict[str, Any]) -> dict
 
 def nuevo_thread_id() -> str:
     return f"ATM-{uuid.uuid4().hex[:8]}"
+
+def run_demo(
+    mensajes: list[str] | None = None,
+    max_turns: int | None = None,
+    max_steps: int | None = None,
+    auto_aprobar: bool = True,
+    thread_id: str | None = None,
+) -> dict[str, Any]:
+    """Demo CLI: pedido(s) → posible HITL (auto-aprobado si auto_aprobar=True)."""
+    msgs = list(mensajes) if mensajes is not None else list(DEMO_MENSAJES)
+    limit = max_turns if max_turns is not None else MAX_TURNS_DEFAULT
+    tid = thread_id or nuevo_thread_id()
+    estado = crear_estado(msgs[0] if msgs else "")
+
+    for mensaje in msgs[:limit]:
+        if estado.get("done") or estado.get("error"):
+            break
+        estado = procesar_turno(estado, mensaje, tid, max_steps=max_steps)
+        if estado.get("pendiente_hitl") and auto_aprobar:
+            estado = aprobar_plan(tid, True, estado)
+
+    estado["thread_id"] = tid
+    return estado
