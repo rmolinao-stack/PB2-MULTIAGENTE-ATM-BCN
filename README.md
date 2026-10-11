@@ -10,12 +10,24 @@ Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula
 
 ## Ejecución 
 
+```text
 python main.py --agente-interactivo           # Ejecuta el workflow del multiagente por CLI en modo interactivo
 python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
 python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
 python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
 python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
+```
 
+## Workflow LangGraph
+
+```text
+START → supervisor  ──┬── tarifas_y_zonas ────┐
+                      ├── tiempos_TMB ────────┼──► supervisor → …
+                      ├── recorridos ─────────┤
+                      └── sintetizar ─────────┘
+                                  │
+                     FINISH → aplicar (interrupt_before) → END
+```
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
