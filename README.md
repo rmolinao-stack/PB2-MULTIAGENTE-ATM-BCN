@@ -10,7 +10,11 @@ Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula
 
 ## Ejecución 
 
-python main.py --multiagent                   # Ejecuta el workflow del multiagente por CLI
+python main.py --agente-interactivo           # Ejecuta el workflow del multiagente por CLI en modo interactivo
+python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
+python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
+python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
+python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN

@@ -12,7 +12,11 @@ Uso CLI para RAG:
   python main.py --eval                         # Evaluación del retrieval con preguntas preestablecidas
 
 Uso CLI para workflow LangGraph:
-  python main.py --multiagent                   # Ejecuta el workflow del multiagente por CLI
+  python main.py --agente-interactivo           # Ejecuta el workflow del multiagente por CLI en modo interactivo
+  python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
+  python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
+  python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
+  python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 
 App Streamlit: streamlit run app.py
 """
@@ -55,9 +59,13 @@ def ejecutar_opcion_ask(pregunta: str, top_k: int | None) -> None:
         indent=2,
     ))
 
-def ejecutar_opcion_multiagent() -> None:
-    print("ES EL _interactivo DE LOS EJEMPLOS!!!!! - PENDIENTE DE IMPLEMENTAR")
-    print("Creo que debería únicamente llamar a ejeuctar_multiagente en otros sitio!!!!")
+def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: int | None) -> None:
+    print("Ejecutando multiagente en modo interactivo...")
+    # Aquí se llamaría a la función correspondiente del multiagente en modo interactivo
+
+def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
+    print("Ejecutando multiagente en modo demo...")
+    # Aquí se llamaría a la función correspondiente del multiagente en modo demo
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -79,13 +87,17 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=None, help="Sobreescribe TOP-K")
     
     ########## RMO: PARAMETROS DEL MULTIAGENTE ###############
-    parser.add_argument("--multiagent", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
-    
+    parser.add_argument("--agente-interactivo", action="store_true", help="Ejecuta el workflow del multiagente en modo interactivo por CLI")
+    parser.add_argument("--agente-demo", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
+    parser.add_argument("--agente-max-turns", type=int, default=None, help="Limita el número máximo de turnos del workflow del multiagente")
+    parser.add_argument("--agente-max-steps", type=int, default=None, help="Limita el número máximo de pasos del workflow del multiagente")
+    parser.add_argument("--agente-sin-auto-aprobar", action="store_true", help="Solo para --agente-demo. Desactiva la autoaprobación de acciones.")    
 
     args = parser.parse_args()
 
     if not any(
-        [args.prepare, args.index, args.recreate_index, args.query, args.ask, args.eval]
+        [args.prepare, args.index, args.recreate_index, args.query, args.ask, args.eval,
+         args.agente_interactivo, args.agente_demo]
     ):
         parser.print_help()
         print(
@@ -105,16 +117,19 @@ def main() -> None:
     if args.query:
         print("Opción query seleccionada ...")
         ejecutar_opcion_query(args.query, args.top_k)
-        #_cmd_query(args.query, args.top_k)
     if args.ask:
         print("Opción ask seleccionada ...")
         ejecutar_opcion_ask(args.ask, args.top_k)
     if args.eval:
         print("Opción eval seleccionada ...")
         ejecutar_evaluacion()
-    if args.multiagent:
-        print("Opción multiagent seleccionada ...")
-        ejecutar_opcion_multiagent()
+    if args.agente_interactivo:
+        print("Opción agente-interactivo seleccionada ...")
+        ejecutar_opcion_multiagente_interactivo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
+    if args.agente_demo:
+        print("Opción agente-demo seleccionada ...")
+        ejecutar_opcion_multiagente_demo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps, sin_auto_aprobar=args.agente_sin_auto_aprobar)
+      
 
 if __name__ == "__main__":
     main()
