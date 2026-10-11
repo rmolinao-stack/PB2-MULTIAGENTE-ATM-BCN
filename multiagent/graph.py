@@ -11,9 +11,8 @@ Flujo:
 Stack: LangChain (ChatGoogleGenerativeAI + @tool) + LangGraph (MemorySaver).
 """
 
-
-
 from typing import Annotated, Any, Literal, TypedDict
+from common.config import MAX_STEPS_DEFAULT
 
 def _acumular(actual: list, nuevo: list) -> list:
     """Reducer de LangGraph: concatena listas (no pisa el valor anterior)."""
@@ -37,3 +36,48 @@ class EstadoGrafo(TypedDict):
 
 
 OPCIONES = ("tarifas_zonas", "tiempos_TMB", "recorridos", "sintetizar", "FINISH")
+
+def build_graph():
+    """Monta el grafo: especialistas vuelven al supervisor; HITL ante aplicar."""
+    print("="*20 + " [TODO]"*5 + " Implementar build_graph " + "[TODO] "*5 + "="*20)
+    return None
+
+_APP = None
+
+
+def get_app():
+    global _APP
+    if _APP is None:
+        _APP = build_graph()
+    return _APP
+
+def config_hilo(thread_id: str) -> dict:
+    """Config de LangGraph: identifica el hilo del checkpointer."""
+    return {"configurable": {"thread_id": thread_id}}
+
+def estado_inicial_grafo(pedido: str, max_steps: int | None = None) -> EstadoGrafo:
+    return {
+        "pedido": pedido,
+        "notas_tarifas_zonas": "",
+        "notas_tiempos_TMB": "",
+        "notas_recorridos": "",
+        "respuesta": "",
+        "plan": [],
+        "siguiente": "",
+        "iteracion": 0,
+        "log": [],
+        "traza_tools": [],
+        "max_steps": max_steps if max_steps is not None else MAX_STEPS_DEFAULT,
+        "plan_aprobado": False,
+        "done": False,
+        "pendiente_hitl": False,
+    }
+
+def hay_interrupt(thread_id: str) -> bool:
+    """True si el hilo está pausado antes de aplicar (HITL pendiente).
+
+    get_state(...).next incluye el nombre del siguiente nodo bloqueado.
+    """
+    snap = get_app().get_state(config_hilo(thread_id))
+    nxt = snap.next or ()
+    return "aplicar" in nxt

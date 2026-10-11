@@ -123,6 +123,7 @@ def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: in
 
 def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
     print("Ejecutando multiagente en modo demo...")
+    print("="*20 + " [TODO]"*5 + " Implementar multiagente_demo " + "[TODO] "*5 + "="*20)
     # Aquí se llamaría a la función correspondiente del multiagente en modo demo
 
 def main() -> None:
