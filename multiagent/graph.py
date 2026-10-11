@@ -1,7 +1,7 @@
 """Grafo multiagente: supervisor ↔ especialistas + HITL.
 
 Flujo:
-  START → supervisor ──┬── tarifas_y_zonas ────┐
+  START → supervisor ──┬── tarifas_zonas ────┐
                        ├── tiempos_TMB ────────┼──► supervisor → …
                        ├── recorridos ─────────┤
                        └── sintetizar ─────────┘
@@ -26,7 +26,7 @@ class EstadoGrafo(TypedDict):
     notas_recorridos: str  # las escribe el especialista recorridos que usará plano_ATM.jpg (equivalente a notas_vision)
     respuesta: str  # texto del plan (sintetizar / aplicar)
     plan: list  # viñetas del plan (≥2 para HITL)
-    siguiente: str  # lo elige el supervisor: tarifas_y_zonas|tiempos_TMB|recorridos|sintetizar|FINISH
+    siguiente: str  # lo elige el supervisor: tarifas_zonas|tiempos_TMB|recorridos|sintetizar|FINISH
     iteracion: int  # contador del supervisor (tope MAX_ITER)
     log: Annotated[list, _acumular]  # traza legible del orquestador
     traza_tools: Annotated[list, _acumular]  # tools usadas en los especialistas
@@ -36,4 +36,4 @@ class EstadoGrafo(TypedDict):
     pendiente_hitl: bool  # True mientras el grafo está pausado antes de aplicar
 
 
-OPCIONES = ("tarifas_y_zonas", "tiempos_TMB", "recorridos", "sintetizar", "FINISH")
+OPCIONES = ("tarifas_zonas", "tiempos_TMB", "recorridos", "sintetizar", "FINISH")

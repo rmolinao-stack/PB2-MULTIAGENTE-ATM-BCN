@@ -21,13 +21,18 @@ python main.py --agent-sin-auto-aprobar       # Solo para --agente-demo. Desacti
 ## Workflow LangGraph
 
 ```text
-START → supervisor  ──┬── tarifas_y_zonas ────┐
-                      ├── tiempos_TMB ────────┼──► supervisor → …
-                      ├── recorridos ─────────┤
-                      └── sintetizar ─────────┘
-                                  │
+START → supervisor  ──┬── tarifas_zonas ────┐
+                      ├── recorridos ───────┼──► supervisor → …
+                      ├── tiempos_TMB ──────┤
+                      └── sintetizar ───────┘
+                              │
                      FINISH → aplicar (interrupt_before) → END
 ```
+A continuación se describen los nodos:
+* supervisor: Encargado de decidir si se llama a un especialista y de continuar el blucle o finalizarlo (previo HITL si toca).
+* tarifas_zonas: Especialista en tarifas y en definir a que zona pertenece una población.
+* recorridos: Especialistas en definir un recorrido dentro de la red de ATM. Principalmente usará el asset plano_ATM.jpg
+* tiempos_TMB: Especialista en definir cuanto tardará un convoy de TMB en llegar a una estación.
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
