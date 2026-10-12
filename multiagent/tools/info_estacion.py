@@ -12,7 +12,8 @@ from google import genai
 from google.genai import types, errors
 
 
-from common.config import ESTACIONS_CSV_PATH, GEMINI_MODEL, AGENT_TEMPERATURE
+from common.config import ESTACIONS_CSV_PATH, GEMINI_MODEL, AGENT_TEMPERATURE, ESTACIONS_CSV_PATH
+from common.utils import obtener_nombre_estacion_utils
 
 #def _normalizar(texto: str) -> str:
 #    """Limpia el texto convirtiendo a minúsculas y eliminando tildes/diacríticos."""
@@ -65,7 +66,7 @@ from common.config import ESTACIONS_CSV_PATH, GEMINI_MODEL, AGENT_TEMPERATURE
 #        return f"Error al procesar el CSV: {e}"
 
 @tool
-def obtener_id_estacion_gemini(
+def obtener_id_estacion(
     nombre_estacion: str, max_reintentos: int = 3, espera_base: int = 2
 ) -> dict:
   """Obtiene el ID_ESTACION del CSV utilizando Gemini para interpretar nombres ambiguos, incompletos o mal escritos.
@@ -159,3 +160,15 @@ def obtener_id_estacion_gemini(
       return {"ERROR": f"Error no controlado: {e}"}
 
   return {"ERROR": "No se pudo obtener respuesta de Gemini tras varios intentos."}
+
+@tool
+def obtener_nombre_estacion(
+    id_estacion: int | str
+) -> str:
+  """Dada un id_estacion, busca y devuelve el NOMBRE_ESTACION correspondiente desde el archivo CSV.
+
+  :param id_estacion: ID de la estación (ej. 113 o "113").
+  :return: Nombre de la estación o mensaje descriptivo si no se encuentra.
+  """
+  return obtener_nombre_estacion_utils(id_estacion, ESTACIONS_CSV_PATH)
+  

@@ -231,15 +231,15 @@ def main() -> None:
         print("EVALUACION 1: ", zonas_poblacion_text.func("Santa coloma y Sant Cugat y Masnou"))
     if args.test_tool_id_estacion:
         print("Opción test-tool-id-estacion seleccionada ...")
-        from multiagent.tools.info_estacion import obtener_id_estacion_gemini
+        from multiagent.tools.info_estacion import obtener_id_estacion
         from common.cargar_api_key import configurar_gemini_api_key
         configurar_gemini_api_key()
-        print(f"EVALUACION 1 - Gemini: {obtener_id_estacion_gemini.func("Carrilet")}")
-        print(f"EVALUACION 2 - Gemini: {obtener_id_estacion_gemini.func("Plaza España")}")
-        print(f"EVALUACION 3 - Gemini: {obtener_id_estacion_gemini.func("Plaça del Centre")}")
-        print(f"EVALUACION 4 - Gemini: {obtener_id_estacion_gemini.func("Valle bron")}")
-        print(f"EVALUACION 5 - Gemini: {obtener_id_estacion_gemini.func("Dos de mayo")}")
-        print(f"EVALUACION 6 - Gemini: {obtener_id_estacion_gemini.func("Vila olimpica")}")
+        print(f"EVALUACION 1 - Gemini: {obtener_id_estacion.func("Carrilet")}")
+        print(f"EVALUACION 2 - Gemini: {obtener_id_estacion.func("Plaza España")}")
+        print(f"EVALUACION 3 - Gemini: {obtener_id_estacion.func("Plaça del Centre")}")
+        print(f"EVALUACION 4 - Gemini: {obtener_id_estacion.func("Valle bron")}")
+        print(f"EVALUACION 5 - Gemini: {obtener_id_estacion.func("Dos de mayo")}")
+        print(f"EVALUACION 6 - Gemini: {obtener_id_estacion.func("Vila olimpica")}")
     if args.test_tool_llegada_tren:
         print("Opción test-tool-llegada-tren seleccionada ...")
         from multiagent.tools.api_tiempos_tmb import API_llegada_tren_estacion_tmb
