@@ -74,3 +74,35 @@ def extraer_info_municipios_normalizado(pregunta: str, ruta_csv: Path) -> str:
         return "No se han detectado municipios específicos en la consulta."
 
     return f"Información geográfica determinista (extraída del {ruta_csv.name}):\n" + "\n".join(encontrados)
+
+
+def obtener_nombre_estacion(id_estacion: int | str, csv_path: str) -> str:
+  """Dada un id_estacion, busca y devuelve el NOMBRE_ESTACION correspondiente desde el archivo CSV.
+
+  :param id_estacion: ID de la estación (ej. 113 o "113").
+  :param csv_path: Ruta al archivo CSV .
+  :return: Nombre de la estación o mensaje descriptivo si no se encuentra.
+  """
+  path = Path(csv_path)
+  if not path.exists():
+    return f"Error: no existe el archivo CSV en {path}"
+
+  try:
+    df = pd.read_csv(path, sep=";")
+
+    if "ID_ESTACION" not in df.columns or "NOMBRE_ESTACION" not in df.columns:
+      return "Error: el CSV debe contener las columnas 'ID_ESTACION' y 'NOMBRE_ESTACION'."
+
+    # Convertimos ambos a string limpios para comparar independientemente del tipo
+    id_str = str(id_estacion).strip()
+    df["ID_STR"] = df["ID_ESTACION"].astype(str).str.strip()
+
+    coincidencia = df[df["ID_STR"] == id_str]
+
+    if not coincidencia.empty:
+      return str(coincidencia.iloc[0]["NOMBRE_ESTACION"])
+
+    return f"No se encontró ninguna estación con el ID: {id_estacion}"
+
+  except Exception as e:
+    return f"Error al procesar el archivo CSV: {e}"

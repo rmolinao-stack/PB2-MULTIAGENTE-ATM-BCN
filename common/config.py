@@ -58,3 +58,6 @@ DEMO_MENSAJES = [
 
 PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"
 ESTACIONS_CSV_PATH = Path(__file__).parent.parent / "assets"  / "estacions.csv"
+
+TMB_METRO_ESTACIONS_URL = "https://api.tmb.cat/v1/itransit/metro/estacions?estacions="
+HTTP_TIMEOUT_SECONDS = 12

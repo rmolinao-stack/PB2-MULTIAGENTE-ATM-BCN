@@ -55,8 +55,79 @@ A continuación se describen los nodos:
 * calcular_ruta_plano: Tool que devuelve como ir de una estación a otra. Para ello se abre un documento de tipo imagen con el plano ferroviario de ATM y se le pasa al modelo para que lo consulte.
   * Tipo de tool: Multimodal.
   * Determinista?: No
-* obtener_id_estacion_gemini / obtener_id_estacion_determinista: **PENDIENTE DOCUMENTAR**
-* 
+* obtener_id_estacion_gemini: **PENDIENTE DOCUMENTAR**
+* API:
+
+# API iMetro
+
+Apartado especial para explicar las particularidades de la API.
+
+```text
+{
+"timestamp": 1746449254397, // timestamp de la consulta
+"linies": [		// Per cada linia...
+  {
+    //Atributs de la linia
+    "codi_linia": 1,
+    "nom_linia": "L1",
+    "nom_familia": "Metro",
+    "codi_familia": 1,
+    "color_linia": "CE1126",
+    "estacions": [  // per cada estació per la que passa la linia
+      {
+        "codi_via": 1,		// Via 1 o 2
+        "id_sentit": 1,		// 1 = Anada, 2 = Tornada
+        "codi_estacio": 120,
+        "linies_trajectes": [	// per cada trajecte que pot tenir la línia, en el cas de metro normalment 1 per sentit
+          {
+            "codi_linia": 1,
+            "nom_linia": "L1",
+            "color_linia": "CE1126",
+            "codi_trajecte": "0011",
+            "desti_trajecte": "Fondo", // Destinació del trajecte
+            "propers_trens": [			// llista dels propers trens que arribaran a la estació
+              {
+                "codi_servei": "120",				// codi del servei que té assignat el tren (es veu al frontal del tren)
+                "temps_arribada": 1746449431000 	// timestamp absolut del moment d'arribada a la estació
+              },
+              {
+                "codi_servei": "121",
+                "temps_arribada": 1746449707000
+              }
+            ]
+          }
+        ]
+      },
+    ]
+  }
+]}
+```
+
+Problemas encontrados sobre estaciones con varias líneas que solo devuelve tiempos de la primera estación. Comunicado:
+
+```text
+para:	developer@tmb.cat
+fecha:	12 oct 2026, 16:28
+asunto:	Problemes amb API iMetro
+
+Bona tarda,
+
+Em poso en contacte amb vosaltres perquè estic consumint la API:
+
+https://api.tmb.cat/v1/itransit/metro/estacions?estacions=<id_estacio>&app_id=<your_app_id>&app_key=<your_app_key>
+
+per una pràctica d'un curs de programació que estic fent i em trobo que algunes de les estacions que son a mes d’una línia, nomes retorna informació d’una línia.
+
+Per exemple, la línia 339 que es trinitat nova nomes retorna informació de la línia L3, quan tindria que retornar informació de L4 y L11. Un altre exemple podria ser la 225 Gorg que nomes retorna informació de L2.
+
+Hi ha algunes excepcions, con les estacions 914 o 932 que sí retorna informació  sobre totes les línies, tot i que està mesclada.
+
+No se si estic fent alguna cosa mala ment o es algun tipus de bug.
+
+La informació de les estacions la trec del excel que es descarrega de https://developer.tmb.cat/data/estacions
+
+Moltes gracies,
+```
 
 
 ## Arreglos/modificaciones proyecto anterior:
