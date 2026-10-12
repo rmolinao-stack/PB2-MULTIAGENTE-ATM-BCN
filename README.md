@@ -64,7 +64,7 @@ A continuación se describen los nodos:
   * Observaciones:
     * Se hace una llamada a Gemini pasandole un csv preformateado con la relación código y estación.
     * Inicialmente se planteo hacer una función determinista como en el caso de las poblaciones. No obstante se detecto que el resultado en caso de escribir la poblaciones con errores, daba mucho mejor resultado hacerlo con un LLM y se decidió dejar así.
-* **obtener_id_estacion**: Esta tool dada un id de estación devuelve el nombre oficial de una estación. Esta función se ha construido por si el modelo en algún momento necesita aclarar como se denomina una estación concreta que pueda aparecer en la API API_llegada_tren_estacion_tmb. Su uso debería ser para casos muy puntuales.
+* **obtener_nombre_estacion_oficial**: Esta tool dada un id de estación devuelve el nombre oficial de una estación. Esta función se ha construido por si el modelo en algún momento necesita aclarar como se denomina una estación concreta que pueda aparecer en la API API_llegada_tren_estacion_tmb. Su uso debería ser para casos muy puntuales.
   * Tipo de tool: Herramienta auxiliar determinista.
   * Determinista?: Si
 * **obtener_hora_actual**: Tool auxiliar para saber la fecha y hora actual. Se puede utilizar para saber cuando es "ahora".
