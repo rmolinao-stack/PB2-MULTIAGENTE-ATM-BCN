@@ -22,6 +22,7 @@ Uso para test de tools
   python main.py --test-tool-rag-tarifas      # Ejecuta un test de pruebas para la tool rag-tarifas
   python main.py --test-tool-plano            # Ejecuta un juego de pruebas para la tool calcular_ruta_plano
   python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones
+  python main.py --test-tool-id-estacion      # Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación
 
 App Streamlit: streamlit run app_rag.py
 """
@@ -166,7 +167,7 @@ def main() -> None:
     parser.add_argument("--test-tool-plano", action="store_true", help="Ejecuta un juego de pruebas para la tool calcular_ruta_plano")
     parser.add_argument("--test-tool-rag-tarifas", action="store_true", help="Ejecuta un test de pruebas para la tool rag-tarifas")
     parser.add_argument("--test-tool-zonas", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones")
-
+    parser.add_argument("--test-tool-id-estacion", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación")
 
     args = parser.parse_args()
 
@@ -223,6 +224,18 @@ def main() -> None:
         print("Opción test-tool-zonas seleccionada ...")
         from multiagent.tools.zonas import zonas_poblacion_text
         print("EVALUACION 1: ", zonas_poblacion_text.func("Santa coloma y Sant Cugat y Masnou"))
+    if args.test_tool_id_estacion:
+        print("Opción test-tool-id-estacion seleccionada ...")
+        from multiagent.tools.id_estacion import obtener_id_estacion_determinista, obtener_id_estacion_gemini
+        from common.cargar_api_key import configurar_gemini_api_key
+        configurar_gemini_api_key()
+        print(f"EVALUACION 1 - Determinista: {obtener_id_estacion_determinista.func("Carrilet")} vs Gemini: {obtener_id_estacion_gemini.func("Carrilet")}")
+        print(f"EVALUACION 2 - Determinista: {obtener_id_estacion_determinista.func("Plaza España")} vs Gemini: {obtener_id_estacion_gemini.func("Plaza España")}")
+        print(f"EVALUACION 3 - Determinista: {obtener_id_estacion_determinista.func("Plaça del Centre")} vs Gemini: {obtener_id_estacion_gemini.func("Plaça del Centre")}")
+        print(f"EVALUACION 4 - Determinista: {obtener_id_estacion_determinista.func("Valle bron")} vs Gemini: {obtener_id_estacion_gemini.func("Valle bron")}")
+        print(f"EVALUACION 5 - Determinista: {obtener_id_estacion_determinista.func("Dos de mayo")} vs Gemini: {obtener_id_estacion_gemini.func("Dos de mayo")}")
+        print(f"EVALUACION 6 - Determinista: {obtener_id_estacion_determinista.func("Vila olimpica")} vs Gemini: {obtener_id_estacion_gemini.func("Vila olimpica")}")
+        
 
 if __name__ == "__main__":
     main()

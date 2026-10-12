@@ -52,7 +52,11 @@ A continuación se describen los nodos:
   * Tipo de tool: Herramienta auxiliar determinista (elaboración propia).
   * Determinista?: Si
   * Observaciones: Se ha reaprovechado la implementación de extracción de zonas del RAG del csv de municipios.
-* calcular_ruta_plano: Tool que devuelve como ir de una estación a otra
+* calcular_ruta_plano: Tool que devuelve como ir de una estación a otra. Para ello se abre un documento de tipo imagen con el plano ferroviario de ATM y se le pasa al modelo para que lo consulte.
+  * Tipo de tool: Multimodal.
+  * Determinista?: No
+* obtener_id_estacion_gemini / obtener_id_estacion_determinista: **PENDIENTE DOCUMENTAR**
+* 
 
 
 ## Arreglos/modificaciones proyecto anterior:

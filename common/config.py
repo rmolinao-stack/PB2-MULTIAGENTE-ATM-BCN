@@ -57,3 +57,4 @@ DEMO_MENSAJES = [
 ]
 
 PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"
+ESTACIONS_CSV_PATH = Path(__file__).parent.parent / "assets"  / "estacions.csv"
