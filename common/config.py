@@ -45,15 +45,21 @@ MAX_TURNS_DEFAULT = 6
 MAX_ITER = 8
 
 DEMO_MENSAJES = [
-    #(
-    #    "¿Cual es el billete de 10 viajes integrado?"
-    #),
+    (
+        "¿Cual es el billete de 10 viajes integrado?"
+    ),
     (
         "¿A que zona pertenece Alella?"
     ),
-    #(
-    #    "¿Qué zonas de población pertenecen a la red de ATM de Barcelona?"
-    #),
+    (
+        "¿Como puedo ir de Alella a Viladecavalls?"
+    ),
+    (
+        "¿Cuantas estaciones tiene la línea 1 del metro?"
+    ),
+    (
+        "¿Como puedo ir de Santa Coloma a Alella, cuanto tarda en llegar el tren y que billete tengo que comprar si hago varios viajes al mes?"
+    ),
 ]
 
 PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"

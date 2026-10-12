@@ -33,6 +33,7 @@ App Streamlit: streamlit run app_rag.py
 import argparse
 import json
 
+from common.config import MAX_STEPS_DEFAULT, MAX_TURNS_DEFAULT
 from multiagent.state import crear_estado
 from multiagent.agent import aprobar_plan, nuevo_thread_id, procesar_turno, run_demo
 from rag.pipeline import ejecutar_ingesta
@@ -162,8 +163,8 @@ def main() -> None:
     ########## RMO: PARAMETROS DEL MULTIAGENTE ###############
     parser.add_argument("--agente-interactivo", action="store_true", help="Ejecuta el workflow del multiagente en modo interactivo por CLI")
     parser.add_argument("--agente-demo", action="store_true", help="Ejecuta el workflow del multiagente por CLI")
-    parser.add_argument("--agente-max-turns", type=int, default=None, help="Limita el número máximo de turnos del workflow del multiagente")
-    parser.add_argument("--agente-max-steps", type=int, default=None, help="Limita el número máximo de pasos del workflow del multiagente")
+    parser.add_argument("--agente-max-turns", type=int, default=MAX_TURNS_DEFAULT, help="Limita el número máximo de turnos del workflow del multiagente")
+    parser.add_argument("--agente-max-steps", type=int, default=MAX_STEPS_DEFAULT, help="Limita el número máximo de pasos del workflow del multiagente")
     parser.add_argument("--agente-sin-auto-aprobar", action="store_true", help="Solo para --agente-demo. Desactiva la autoaprobación de acciones.")    
     
     ########## RMO: PARAMETROS DE TESTEO PUNTUAL ###############
@@ -176,18 +177,7 @@ def main() -> None:
     
     args = parser.parse_args()
 
-    #if not any(
-    #    [args.prepare, args.index, args.recreate_index, args.query, args.ask, args.eval,
-    #     args.agente_interactivo, args.agente_demo]
-    #):
-    #    parser.print_help()
-    #    print(
-    #        "\nEjemplo:\n"
-    #        "  python main.py --prepare --index\n"
-    #        '  python main.py --ask "¿Cuantos viajes puedo hacer con T-Usual?"\n'
-    #        "  streamlit run app.py"
-    #    )
-    #    return
+    ############# RMO: RAG ###################
 
     if args.prepare:
         print("Opción prepare seleccionada ...")
@@ -204,12 +194,16 @@ def main() -> None:
     if args.eval:
         print("Opción eval seleccionada ...")
         ejecutar_evaluacion()
+
+    ############# RMO: MULTIAGENTE ###################
     if args.agente_interactivo:
         print("Opción agente-interactivo seleccionada ...")
         ejecutar_opcion_multiagente_interactivo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
     if args.agente_demo:
         print("Opción agente-demo seleccionada ...")
         ejecutar_opcion_multiagente_demo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps, sin_auto_aprobar=args.agente_sin_auto_aprobar)
+
+    ############# RMO: TEST TOOLS ###################
     if args.test_tool_plano:
         print("Opción test-tool-plano seleccionada ...")
         from multiagent.tools.ruta_plano import calcular_ruta_plano

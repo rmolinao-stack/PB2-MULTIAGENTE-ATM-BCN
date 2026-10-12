@@ -125,6 +125,9 @@ def _ejecutar_con_tools(
     else:
         texto = texto or "He parado por max_steps en el especialista."
 
+    print("Resultado del especialista:", texto)
+    print("Traza del especialista:", traza)
+
     return texto, traza
 
 def _fallback_siguiente(estado: EstadoGrafo) -> str:
@@ -180,11 +183,8 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
         f"respuesta: {(estado.get('respuesta') or '')}\n"
     )
 
-    print("="*10 + " PROMPT " + "="*10)
-    print(prompt)
-    print("="*10 + " END PROMPT " + "="*10)
-
     try:
+        print("Ejecutando nodo supervisor...")
         out = llm.invoke([HumanMessage(content=prompt)])
         raw = _texto_llm(out.content)
         palabra = re.findall(r"[A-Za-z_]+", raw)
@@ -203,6 +203,7 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
 
 def nodo_tarifas(estado: EstadoGrafo) -> dict:
     """Especialista: Responde sobre tarifas y condiciones de uso (puede usar tools). No cierra el plan."""
+    print("Ejecutando nodo tarifas...")
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
         "Eres el especialista en TARIFAS y CONDICIONES DE USO de la red ATM.\n"
@@ -213,6 +214,7 @@ def nodo_tarifas(estado: EstadoGrafo) -> dict:
         f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
         "Devuelve solo las notas de tarifas o condiciones de uso."
     )
+    
     texto, traza = _ejecutar_con_tools(system, user, max_steps)
     return {
         "notas_tarifas": texto,
@@ -222,6 +224,7 @@ def nodo_tarifas(estado: EstadoGrafo) -> dict:
 
 def nodo_zonas(estado: EstadoGrafo) -> dict:
     """Especialista: Responde las zonas a la que pertenecen las poblaciones (puede usar tools). No cierra el plan."""
+    print("Ejecutando nodo zonas...")
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
         "Eres el especialista en ZONAS de la red ATM.\n"
@@ -241,11 +244,12 @@ def nodo_zonas(estado: EstadoGrafo) -> dict:
 
 
 def nodo_recorridos(estado: EstadoGrafo) -> dict:
-    """Especialista: Responde los recorridos de la red ATM (puede usar tools). No cierra el plan."""
+    """Especialista: Calcula el recorrido entre dos estaciones o poblaciones de la red ATM (puede usar tools). No cierra el plan."""
+    print("Ejecutando nodo recorridos...")
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
-        "Eres el especialista que calcula RUTAS y RECORRIDOS entre DOS estaciones de la red ATM.\n"
-        "Usa tools si ayudan (principalmente recorridos_text, pero puedes usar otras si es necesario). \n"
+        "Eres el especialista que calcula RUTAS y RECORRIDOS entre DOS estaciones o poblacionies de la red ATM.\n"
+        "Debes usar la tool calcular_ruta_plano. Puedes usar otras tools si ayudan. \n"
         "Escribe notas cortas en español (no el plan final).\n"
     )
     user = (
@@ -262,6 +266,7 @@ def nodo_recorridos(estado: EstadoGrafo) -> dict:
 
 def nodo_tiempos_tmb(estado: EstadoGrafo) -> dict:
     """Especialista: Responde los tiempos de llegada de los trenes a las estaciones únicamente del metro (TMB) (puede usar tools). No cierra el plan."""
+    print("Ejecutando nodo tiempos TMB...")
 
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (

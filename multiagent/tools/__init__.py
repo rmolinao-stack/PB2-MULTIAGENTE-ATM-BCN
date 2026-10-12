@@ -15,11 +15,10 @@ TOOLS = [
     rag_ask_tarifas,
     zonas_poblacion_text,
     API_llegada_tren_estacion_tmb,
+    calcular_ruta_plano,
     obtener_nombre_estacion_oficial,
     obtener_id_estacion,
     obtener_hora_actual,
-    calcular_ruta_plano,
-
 ]
 
 TOOL_BY_NAME = {t.name: t for t in TOOLS}
@@ -29,9 +28,7 @@ def ejecutar_tool(nombre: str, args: dict | None = None) -> str:
     """Ejecuta una tool de la allowlist; si no está, bloquea."""
     args = args or {}
     tool = TOOL_BY_NAME.get(nombre)
-    print("="*10 + " EJECUTANDO TOOL " + "="*10)
     print(f"Ejecutando tool: {nombre} con args: {args}")
-    print("="*10 + " END EJECUTANDO TOOL " + "="*10)
     if tool is None:
         return f"Error: tool '{nombre}' no está permitida."
     try:

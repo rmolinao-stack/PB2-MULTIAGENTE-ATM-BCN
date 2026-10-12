@@ -76,7 +76,7 @@ def extraer_info_municipios_normalizado(pregunta: str, ruta_csv: Path) -> str:
     return f"Información geográfica determinista (extraída del {ruta_csv.name}):\n" + "\n".join(encontrados)
 
 
-def obtener_nombre_estacion(id_estacion: int | str, csv_path: str) -> str:
+def obtener_nombre_estacion_utils(id_estacion: int | str, csv_path: str) -> str:
   """Dada un id_estacion, busca y devuelve el NOMBRE_ESTACION correspondiente desde el archivo CSV.
 
   :param id_estacion: ID de la estación (ej. 113 o "113").

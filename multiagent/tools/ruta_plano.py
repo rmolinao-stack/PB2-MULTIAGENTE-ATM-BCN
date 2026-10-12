@@ -13,7 +13,18 @@ from common.config import PLANO_ATM_PATH, GEMINI_MODEL, AGENT_TEMPERATURE
 
 @tool
 def calcular_ruta_plano(estacion1: str, estacion2: str) -> str:
-    """Calcula la ruta ferroviaria entre dos estaciones de la red ATM a partir de la imagen del plano con la 'Red Ferroviaria Integrada'."""
+    """
+    Para saber la ruta que hay entre dos estaciones de la red ATM HAY QUE USAR ESTE TOOL.
+    
+    Calcula la ruta ferroviaria entre dos estaciones de la red ATM a partir de la imagen del plano con la 'Red Ferroviaria Integrada'.
+
+    Args:
+        estacion1 (str): Nombre de la primera estación.
+        estacion2 (str): Nombre de la segunda estación.
+
+    Returns:
+        str: Descripción de la ruta entre las dos estaciones en 2-3 frases en español.
+    """
     #Llamar a esta tool cuando el usuario quiera conocer la ruta o recorrido entre dos estaciones de la red ATM.
     #"""
     path = PLANO_ATM_PATH

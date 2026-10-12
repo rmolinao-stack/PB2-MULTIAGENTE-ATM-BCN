@@ -1,26 +1,28 @@
 # PB2-MULTIAGENTE-ATM-BCN
 
-Planifica rutas, calcula tarifas y devuelve información de zonas dentro de la red de ATM. También calcula el tiempo que tardará en llegar un convoy del Metro (TMB) a una estación en tiempo real. No calcula el tiempo de llegado de convoys a las estaciones de FGC, Rodalíes, TRAM y buses porque esta fuera del scope del proyecto.
-
-## API https://developer.tmb.cat/
-
+PB2-MULTIAGENTE-ATM-BCN es un empleado sintetico capaz de calcular el trayecto a realizar entre dos estaciones de la red ATM de Barcelona (sistema integrado que permite utilizar diferentes medios de transporte como metro, autobuses, Ferrocarrils, TRAMvia y Rodalies), calcular los abonos necesario a adquirir, así como dar información sobre sus tarifas y condiciones de uso, además de ser capaz de calcular el tiempo que tardará llegar el siguiente metro (TMB) dada una estación concreta (no se incluye el calculo del tiempo de llegada de convoys a las estaciones de FGC, Rodalíes, TRAMvia y autobuses ya que está fuera del scope del proyecto).
 
 ## Ejecución 
-
-```text
-python main.py --agente-interactivo           # Ejecuta el workflow del multiagente por CLI en modo interactivo
-python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
-python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
-python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
-python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
-```
 
 ### Para testear tools:
 
 ```text
-python main.py --test-tool-rag-tarifas      # Ejecuta un test de pruebas para la tool rag-tarifas
-python main.py --test-tool-plano            # Ejecuta un juego de pruebas para la tool calcular_ruta_plano
-python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones
+  python main.py --agente-interactivo           # Ejecuta el workflow del multiagente por CLI en modo interactivo
+  python main.py --agente-demo                  # Ejecuta una demo del workflow del multiagente por CLI. Por defecto autoaprueba las acciones.
+  python main.py --agente-max-turns 4           # Limita el número máximo de turnos del workflow del multiagente
+  python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
+  python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
+```
+
+### Testeo de tools:
+
+```text
+  python main.py --test-tool-rag-tarifas      # Ejecuta un test de pruebas para la tool rag-tarifas.
+  python main.py --test-tool-plano            # Ejecuta un juego de pruebas para la tool calcular_ruta_plano.
+  python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones.
+  python main.py --test-tool-id-estacion      # Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación.
+  python main.py --test-tool-llegada-tren     # Ejecuta un test de pruebas para la tool de obtención de los tiempos de llegada de trenes en TMB.
+  python main.py --test-tool-hora-actual      # Ejecuta un test de pruebas para la tool de obtención de la hora actual.
 ```
 
 ## Workflow LangGraph
@@ -35,27 +37,43 @@ START → supervisor  ──┬── tarifas ──────────┐
                      FINISH → aplicar (interrupt_before) → END
 ```
 A continuación se describen los nodos:
-* supervisor: Encargado de decidir si se llama a un especialista y de continuar el blucle o finalizarlo (previo HITL si toca).
-* tarifas: Especialista en tarifas. Idealmente usará el RAG de tarifas.
-* zonas: Especialista sobre las zonas a la que pertence una población. Idealmente llamará a una tool determinista para extraer la información.
-* recorridos: Especialistas en definir un recorrido dentro de la red de ATM. Principalmente usará el asset plano_ATM.jpg
-* tiempos: Especialista en definir cuanto tardará un convoy de TMB en llegar a una estación.
+* **supervisor**: Encargado de decidir si se llama a un especialista y de continuar el blucle o finalizarlo (previo HITL si toca).
+* **tarifas**: Especialista en tarifas. Idealmente usará el RAG de tarifas.
+* **zonas**: Especialista sobre las zonas a la que pertence una población. Idealmente llamará a una tool determinista para extraer la información.
+* **recorridos**: Especialistas en definir un recorrido dentro de la red de ATM. Principalmente usará el asset plano_ATM.jpg
+* **tiempos**: Especialista en definir cuanto tardará un convoy de TMB en llegar a una estación.
 
 ## tools 
-* rag_ask_tarifas: Tool que pregunta al RAG sobre tarifas.
+* **rag_ask_tarifas**: Tool que pregunta al RAG sobre tarifas.
   * Tipo de tool: RAG Completo 
   * Determinista?: No
-* zonas_poblacion_text: Tool que revisa si en un texto aparece una o varias poblaciones de incluidas en la red ATM y devuelve la zona, el sector y si es tarifa metropolitana, de cada una de las poblaciones encontradas.
-  * Tipo de tool: Herramienta auxiliar determinista (elaboración propia).
+* **zonas_poblacion_text**: Tool que revisa si en un texto aparece una o varias poblaciones de incluidas en la red ATM y devuelve la zona, el sector y si es tarifa metropolitana, de cada una de las poblaciones encontradas.
+  * Tipo de tool: Herramienta auxiliar determinista.
   * Determinista?: Si
   * Observaciones: Se ha reaprovechado la implementación de extracción de zonas del RAG del csv de municipios.
-* calcular_ruta_plano: Tool que devuelve como ir de una estación a otra. Para ello se abre un documento de tipo imagen con el plano ferroviario de ATM y se le pasa al modelo para que lo consulte.
+* **calcular_ruta_plano**: Tool que devuelve como ir de una estación a otra. Para ello se abre un documento de tipo imagen con el plano ferroviario de ATM y se le pasa al modelo para que lo consulte.
   * Tipo de tool: Multimodal.
   * Determinista?: No
-* obtener_id_estacion_gemini: **PENDIENTE DOCUMENTAR**
-* API:
+* **API_llegada_tren_estacion_tmb**: Llama a la API de iMetro (para más detalle ver apartado correspondiente) que calcula, dada una estación de TMB, el tiempo que tardará en llegar los siguientes convoys a esa estación, en todas las direcciones y líneas.
+  * Tipo de tool: API
+  * Determinista?: Si
+  * Observaciones: Se ha detectado un mal funcionamiento en la API que hace que, en aquellas estaciones que tienen varias líneas, solo devuelva información de una sola línea. Esto ha sido escalado al equipo de developer@tmb.cat. A cierre de proyecto no ha sido resuelto.
+* **obtener_id_estacion**: Esta tool se podría haber integrado dentro de API_llegada_tren_estacion_tmb, ya que es la única forma de obtener el id de la estación necesaria para llamar a la API, pero se ha decidido separar para comprobar, a modo didactico, como el modelo la usa para poder utilizar la tool de la API. 
+  * Tipo de tool: Multimodal / mini-RAG / LLM
+  * Determinista?: No
+  * Observaciones:
+    * Se hace una llamada a Gemini pasandole un csv preformateado con la relación código y estación.
+    * Inicialmente se planteo hacer una función determinista como en el caso de las poblaciones. No obstante se detecto que el resultado en caso de escribir la poblaciones con errores, daba mucho mejor resultado hacerlo con un LLM y se decidió dejar así.
+* **obtener_id_estacion**: Esta tool dada un id de estación devuelve el nombre oficial de una estación. Esta función se ha construido por si el modelo en algún momento necesita aclarar como se denomina una estación concreta que pueda aparecer en la API API_llegada_tren_estacion_tmb. Su uso debería ser para casos muy puntuales.
+  * Tipo de tool: Herramienta auxiliar determinista.
+  * Determinista?: Si
+* **obtener_hora_actual**: Tool auxiliar para saber la fecha y hora actual. Se puede utilizar para saber cuando es "ahora".
+  * Tipo de tool: Herramienta auxiliar determinista.
+  * Determinista?: Si
 
-# API iMetro
+# **PENDIENTE REVISAR A PARTIR DE AQUI**
+
+## API iMetro
 
 Apartado especial para explicar las particularidades de la API.
 
