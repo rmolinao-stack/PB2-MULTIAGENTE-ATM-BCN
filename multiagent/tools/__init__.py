@@ -4,12 +4,22 @@ Solo las tools de esta lista se pueden ejecutar.
 Si el modelo pide otra, ejecutar_tool la bloquea.
 """
 
+from multiagent.tools.hora_actual import obtener_hora_actual
+from multiagent.tools.api_tiempos_tmb import API_llegada_tren_estacion_tmb
+from multiagent.tools.info_estacion import obtener_id_estacion, obtener_nombre_estacion_oficial
 from multiagent.tools.rag_tarifas import rag_ask_tarifas
+from multiagent.tools.ruta_plano import calcular_ruta_plano
 from multiagent.tools.zonas import zonas_poblacion_text
 
 TOOLS = [
     rag_ask_tarifas,
     zonas_poblacion_text,
+    API_llegada_tren_estacion_tmb,
+    obtener_nombre_estacion_oficial,
+    obtener_id_estacion,
+    obtener_hora_actual,
+    calcular_ruta_plano,
+
 ]
 
 TOOL_BY_NAME = {t.name: t for t in TOOLS}

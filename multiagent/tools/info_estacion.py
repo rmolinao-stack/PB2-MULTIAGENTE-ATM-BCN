@@ -162,10 +162,10 @@ def obtener_id_estacion(
   return {"ERROR": "No se pudo obtener respuesta de Gemini tras varios intentos."}
 
 @tool
-def obtener_nombre_estacion(
+def obtener_nombre_estacion_oficial(
     id_estacion: int | str
 ) -> str:
-  """Dada un id_estacion, busca y devuelve el NOMBRE_ESTACION correspondiente desde el archivo CSV.
+  """Dada un id_estacion, busca y devuelve el NOMBRE_ESTACION OFICIAL correspondiente desde el archivo CSV OFICIAL.
 
   :param id_estacion: ID de la estación (ej. 113 o "113").
   :return: Nombre de la estación o mensaje descriptivo si no se encuentra.

@@ -249,8 +249,8 @@ def main() -> None:
         print("EVALUACION 4: ", API_llegada_tren_estacion_tmb.func(2252345556))
     if args.test_tool_hora_actual:
         print("Opción test-tool-hora-actual seleccionada ...")
-        from multiagent.tools.hora_actual import hora_actual
-        print("EVALUACION 1: ", hora_actual.func())
+        from multiagent.tools.hora_actual import obtener_hora_actual
+        print("EVALUACION 1: ", obtener_hora_actual.func())
         
 
 if __name__ == "__main__":
