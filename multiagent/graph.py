@@ -205,9 +205,9 @@ def nodo_tarifas(estado: EstadoGrafo) -> dict:
     """Especialista: Responde sobre tarifas y condiciones de uso (puede usar tools). No cierra el plan."""
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
-        "Eres el especialista en TARIFAS y CONDICIONES DE USO de la red ATM." \
-        "Usa tools si ayudan (principalmente rag_ask_tarifas). " \
-        "Escribe notas cortas en español (no el plan final)."
+        "Eres el especialista en TARIFAS y CONDICIONES DE USO de la red ATM.\n"
+        "Usa tools si ayudan (principalmente rag_ask_tarifas).\n"
+        "Escribe notas cortas en español (no el plan final).\n"
     )
     user = (
         f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
@@ -220,14 +220,13 @@ def nodo_tarifas(estado: EstadoGrafo) -> dict:
         "log": ["tarifas: notas listas"],
     }
 
-# RMO: PENDIENTE REVISAR
 def nodo_zonas(estado: EstadoGrafo) -> dict:
     """Especialista: Responde las zonas a la que pertenecen las poblaciones (puede usar tools). No cierra el plan."""
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
-        "Eres el especialista en ZONAS de la red ATM." \
-        "Usa tools si ayudan (principalmente zonas_poblacion_text, pero puedes usar otras si es necesario). " \
-        "Escribe notas cortas en español (no el plan final)."
+        "Eres el especialista en ZONAS de la red ATM.\n"
+        "Usa tools si ayudan (principalmente zonas_poblacion_text, pero puedes usar otras si es necesario). \n"
+        "Escribe notas cortas y directas con la población, su zona y su sector. En español (no el plan final).\n"
     )
     user = (
         f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
@@ -245,9 +244,9 @@ def nodo_recorridos(estado: EstadoGrafo) -> dict:
     """Especialista: Responde los recorridos de la red ATM (puede usar tools). No cierra el plan."""
     max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
     system = (
-        "Eres el especialista que calcula RUTAS y RECORRIDOS entre dos estaciones de la red ATM." \
-        "Usa tools si ayudan (principalmente recorridos_text, pero puedes usar otras si es necesario). " \
-        "Escribe notas cortas en español (no el plan final)."
+        "Eres el especialista que calcula RUTAS y RECORRIDOS entre DOS estaciones de la red ATM.\n"
+        "Usa tools si ayudan (principalmente recorridos_text, pero puedes usar otras si es necesario). \n"
+        "Escribe notas cortas en español (no el plan final).\n"
     )
     user = (
         f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
@@ -261,22 +260,26 @@ def nodo_recorridos(estado: EstadoGrafo) -> dict:
     }
     
 
-# RMO: PENDIENTE REVISAR
-def nodo_tiempos(estado: EstadoGrafo) -> dict:
-    """Genera notas sobre tiempos según el pedido."""
-    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    #llm = get_llm()
-    #prompt = (
-    #    "Genera notas sobre tiempos según el pedido.\n\n"
-    #    f"Pedido: {estado.get('pedido')}\n"
-    #    f"Notas previas: {estado.get('notas_tiempos') or '(nada)'}\n"
-    #)
-    #out = llm.invoke([HumanMessage(content=prompt)])
-    #texto = _texto_llm(out.content)
-    #return {
-    #    "notas_tiempos": texto,
-    #    "log": ["tiempos: notas generadas"],
-    #}
+def nodo_tiempos_tmb(estado: EstadoGrafo) -> dict:
+    """Especialista: Responde los tiempos de llegada de los trenes a las estaciones únicamente del metro (TMB) (puede usar tools). No cierra el plan."""
+
+    max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
+    system = (
+        "Eres el especialista que calcula los TIEMPOS DE LLEGADA de los trenes a las estaciones del metro (TMB)\n"
+        "Solo considera las estaciones del metro (TMB). No incluye estaciones de otras redes como FGC, Rodalies, TRAM o buses.\n"
+        "Usa tools si ayudan (principalmente API_llegada_tren_estacion_tmb y otras relacionadas, pero puedes usar otras si es necesario). \n"
+        "Escribe notas cortas en español (no el plan final).\n"
+    )
+    user = (
+        f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
+        "Devuelve solo las notas sobre los tiempos de llegada de los trenes a las estaciones del metro (TMB)."
+    )
+    texto, traza = _ejecutar_con_tools(system, user, max_steps)
+    return {
+        "notas_tiempos": texto,
+        "traza_tools": traza,
+        "log": ["tiempos: notas listas"],
+    }
 
 def nodo_sintetizar(estado: EstadoGrafo) -> dict:
     """Une las notas en respuesta + plan (viñetas). Deja el flujo listo para HITL."""
@@ -372,7 +375,7 @@ def build_graph():
     grafo.add_node("supervisor", nodo_supervisor)
     grafo.add_node("tarifas", nodo_tarifas)
     grafo.add_node("zonas", nodo_zonas)
-    grafo.add_node("tiempos", nodo_tiempos)
+    grafo.add_node("tiempos", nodo_tiempos_tmb)
     grafo.add_node("recorridos", nodo_recorridos)
     grafo.add_node("sintetizar", nodo_sintetizar)
     grafo.add_node("aplicar", nodo_aplicar)

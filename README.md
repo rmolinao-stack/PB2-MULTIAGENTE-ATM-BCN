@@ -1,12 +1,9 @@
 # PB2-MULTIAGENTE-ATM-BCN
 
-Planifica rutas dentro de la red de ATM, calcula tarifas de la red ATM y calcula el tiempo que tardará en llegar un convoy del Metro a una estación en tiempo real.
+Planifica rutas, calcula tarifas y devuelve información de zonas dentro de la red de ATM. También calcula el tiempo que tardará en llegar un convoy del Metro (TMB) a una estación en tiempo real. No calcula el tiempo de llegado de convoys a las estaciones de FGC, Rodalíes, TRAM y buses porque esta fuera del scope del proyecto.
 
 ## API https://developer.tmb.cat/
 
-* Se utilizará la API de https://developer.tmb.cat/
-* Se requiere un app_id y un app_key.
-* Para más información visitar https://developer.tmb.cat/docs/getting-started
 
 ## Ejecución 
 
@@ -61,6 +58,10 @@ A continuación se describen los nodos:
 # API iMetro
 
 Apartado especial para explicar las particularidades de la API.
+
+* Se utilizará la API de iMetro https://developer.tmb.cat/api-docs/v1/imetro
+* Se requiere un app_id y un app_key. Para más información visitar https://developer.tmb.cat/docs/getting-started
+* La API devuelve en JSON un esta estructura:
 
 ```text
 {
