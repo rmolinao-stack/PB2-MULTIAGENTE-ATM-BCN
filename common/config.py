@@ -56,3 +56,4 @@ DEMO_MENSAJES = [
     #),
 ]
 
+PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"

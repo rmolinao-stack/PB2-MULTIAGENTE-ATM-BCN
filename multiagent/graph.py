@@ -240,22 +240,26 @@ def nodo_zonas(estado: EstadoGrafo) -> dict:
         "log": ["zonas: notas listas"],
     }
 
-# RMO: PENDIENTE REVISAR
+
 def nodo_recorridos(estado: EstadoGrafo) -> dict:
-    """Genera notas sobre recorridos según el pedido."""
-    print("="*10+" ¡¡¡¡¡¡ PENDIENTE REVISAR !!!!!!!!!!!! "+"="*10)
-    #llm = get_llm()
-    #prompt = (
-    #    "Genera notas sobre recorridos según el pedido.\n\n"
-    #    f"Pedido: {estado.get('pedido')}\n"
-    #    f"Notas previas: {estado.get('notas_recorridos') or '(nada)'}\n"
-    #)
-    #out = llm.invoke([HumanMessage(content=prompt)])
-    #texto = _texto_llm(out.content)
-    #return {
-    #    "notas_recorridos": texto,
-    #    "log": ["recorridos: notas generadas"],
-    #}
+    """Especialista: Responde los recorridos de la red ATM (puede usar tools). No cierra el plan."""
+    max_steps = int(estado.get("max_steps") or MAX_STEPS_DEFAULT)
+    system = (
+        "Eres el especialista que calcula RUTAS y RECORRIDOS entre dos estaciones de la red ATM." \
+        "Usa tools si ayudan (principalmente recorridos_text, pero puedes usar otras si es necesario). " \
+        "Escribe notas cortas en español (no el plan final)."
+    )
+    user = (
+        f"Pedido del usuario:\n{estado.get('pedido')}\n\n"
+        "Devuelve solo las notas sobre los recorridos de la red ATM."
+    )
+    texto, traza = _ejecutar_con_tools(system, user, max_steps)
+    return {
+        "notas_recorridos": texto,
+        "traza_tools": traza,
+        "log": ["recorridos: notas listas"],
+    }
+    
 
 # RMO: PENDIENTE REVISAR
 def nodo_tiempos(estado: EstadoGrafo) -> dict:

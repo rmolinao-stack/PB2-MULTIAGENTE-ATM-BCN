@@ -18,7 +18,12 @@ Uso CLI para workflow LangGraph:
   python main.py --agente-max-steps 4           # Limita el número máximo de pasos del workflow del multiagente
   python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 
-App Streamlit: streamlit run app.py
+Uso para test de tools
+  python main.py --test-tool-rag-tarifas      # Ejecuta un test de pruebas para la tool rag-tarifas
+  python main.py --test-tool-plano            # Ejecuta un juego de pruebas para la tool calcular_ruta_plano
+  python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones
+
+App Streamlit: streamlit run app_rag.py
 """
 
 import argparse
@@ -156,21 +161,27 @@ def main() -> None:
     parser.add_argument("--agente-max-turns", type=int, default=None, help="Limita el número máximo de turnos del workflow del multiagente")
     parser.add_argument("--agente-max-steps", type=int, default=None, help="Limita el número máximo de pasos del workflow del multiagente")
     parser.add_argument("--agente-sin-auto-aprobar", action="store_true", help="Solo para --agente-demo. Desactiva la autoaprobación de acciones.")    
+    
+    ########## RMO: PARAMETROS DE TESTEO PUNTUAL ###############
+    parser.add_argument("--test-tool-plano", action="store_true", help="Ejecuta un juego de pruebas para la tool calcular_ruta_plano")
+    parser.add_argument("--test-tool-rag-tarifas", action="store_true", help="Ejecuta un test de pruebas para la tool rag-tarifas")
+    parser.add_argument("--test-tool-zonas", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones")
+
 
     args = parser.parse_args()
 
-    if not any(
-        [args.prepare, args.index, args.recreate_index, args.query, args.ask, args.eval,
-         args.agente_interactivo, args.agente_demo]
-    ):
-        parser.print_help()
-        print(
-            "\nEjemplo:\n"
-            "  python main.py --prepare --index\n"
-            '  python main.py --ask "¿Cuantos viajes puedo hacer con T-Usual?"\n'
-            "  streamlit run app.py"
-        )
-        return
+    #if not any(
+    #    [args.prepare, args.index, args.recreate_index, args.query, args.ask, args.eval,
+    #     args.agente_interactivo, args.agente_demo]
+    #):
+    #    parser.print_help()
+    #    print(
+    #        "\nEjemplo:\n"
+    #        "  python main.py --prepare --index\n"
+    #        '  python main.py --ask "¿Cuantos viajes puedo hacer con T-Usual?"\n'
+    #        "  streamlit run app.py"
+    #    )
+    #    return
 
     if args.prepare:
         print("Opción prepare seleccionada ...")
@@ -193,7 +204,25 @@ def main() -> None:
     if args.agente_demo:
         print("Opción agente-demo seleccionada ...")
         ejecutar_opcion_multiagente_demo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps, sin_auto_aprobar=args.agente_sin_auto_aprobar)
-      
+    if args.test_tool_plano:
+        print("Opción test-tool-plano seleccionada ...")
+        from multiagent.tools.ruta_plano import calcular_ruta_plano
+        from common.cargar_api_key import configurar_gemini_api_key
+        configurar_gemini_api_key()
+        print("EVALUACION 1: ", calcular_ruta_plano.func("Santa coloma", "Sants"))
+        print("EVALUACION 2: ", calcular_ruta_plano.func("Masnou", "Viladecavall"))
+        print("EVALUACION 3: ", calcular_ruta_plano.func("Alella", "Terrassa"))
+        print("EVALUACION 4: ", calcular_ruta_plano.func("Madrid", "Valencia"))
+    if args.test_tool_rag_tarifas:
+        print("Opción test-tool-rag-tarifas seleccionada ...")
+        from multiagent.tools.rag_tarifas import rag_ask_tarifas
+        from common.cargar_api_key import configurar_gemini_api_key
+        configurar_gemini_api_key()
+        print("EVALUACION 1: ", rag_ask_tarifas.func("¿Cual es el billete de 10 viajes?"))
+    if args.test_tool_zonas:
+        print("Opción test-tool-zonas seleccionada ...")
+        from multiagent.tools.zonas import zonas_poblacion_text
+        print("EVALUACION 1: ", zonas_poblacion_text.func("Santa coloma y Sant Cugat y Masnou"))
 
 if __name__ == "__main__":
     main()

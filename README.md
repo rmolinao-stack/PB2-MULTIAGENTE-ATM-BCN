@@ -18,6 +18,14 @@ python main.py --agente-max-steps 4           # Limita el número máximo de pas
 python main.py --agente-sin-auto-aprobar      # Solo para --agente-demo. Desactiva la autoaprobación de acciones.
 ```
 
+### Para testear tools:
+
+```text
+python main.py --test-tool-rag-tarifas      # Ejecuta un test de pruebas para la tool rag-tarifas
+python main.py --test-tool-plano            # Ejecuta un juego de pruebas para la tool calcular_ruta_plano
+python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones
+```
+
 ## Workflow LangGraph
 
 ```text
@@ -38,17 +46,29 @@ A continuación se describen los nodos:
 
 ## tools 
 * rag_ask_tarifas: Tool que pregunta al RAG sobre tarifas.
-  * Tipo de tool: RAG Completo
+  * Tipo de tool: RAG Completo 
+  * Determinista?: No
 * zonas_poblacion_text: Tool que revisa si en un texto aparece una o varias poblaciones de incluidas en la red ATM y devuelve la zona, el sector y si es tarifa metropolitana, de cada una de las poblaciones encontradas.
   * Tipo de tool: Herramienta auxiliar determinista (elaboración propia).
+  * Determinista?: Si
   * Observaciones: Se ha reaprovechado la implementación de extracción de zonas del RAG del csv de municipios.
+* calcular_ruta_plano: Tool que devuelve como ir de una estación a otra
 
-## Arreglos proyecto anterior:
+
+## Arreglos/modificaciones proyecto anterior:
 * En requirements: pandas>=2.0.0, <3.0.0
+* Se incluye el wrapper "rag_ask(consulta: str)" en rag_service.py para usarlo como tool.
+* Se renombra app.py por app_rag.py para mantener el asistente de la primera versión.
 
 ## Decisiones técnicas
 
 ## Cosas a mejorar
+
+## API KEYS
+
+GEMINI_API_KEY
+TMB_API_ID
+TMB_API_KEY
 
 # PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 Asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
