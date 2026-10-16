@@ -159,28 +159,22 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
 
     llm = get_llm(temperature=0)
     prompt = (
-        "Eres el supervisor de un planificador de rutas, tarifas y zonas de la red ATM y tiempos de llegada de trenes a las estaciones de Metro (TMB).\n"
-        "Elige el siguiente rol:\n"
-        "- tarifas: tarifas, abonos y condiciones de uso para la red ATM de Barcelona.\n"
-        "- zonas: zona de la red ATM a la que pertenece una población.\n"
-        "- recorridos: rutas y recorridos dentro de la red ferrovial integrada en ATM (Rodalies, FGC, Metro y TRAM, excluyendo autobuses).\n"
-        "- tiempos: calcula el tiempo en llegar el próximo metro de TMB a una parada concreta.\n"
-        "- sintetizar: une notas en un plan final con viñetas\n"
-        "- FINISH: ya hay plan/respuesta lista\n"
-        "Responde SOLO una palabra: tarifas, zonas, recorridos, tiempos, sintetizar o FINISH.\n"
-        "Regla: sin notas_tarifas → tarifas; sin notas_zonas → zonas; sin notas_recorridos → recorridos; sin notas_tiempos → tiempos; "
-        "con todas y sin respuesta → sintetizar; con respuesta → FINISH.\n\n"
-        f"pedido: {estado.get('pedido')}\n"
-        #f"notas_tarifas: {(estado.get('notas_tarifas') or '')[:400]}\n"
-        #f"notas_zonas: {(estado.get('notas_zonas') or '')[:400]}\n"
-        #f"notas_recorridos: {(estado.get('notas_recorridos') or '')[:400]}\n"
-        #f"notas_tiempos: {(estado.get('notas_tiempos') or '')[:200]}\n"
-        #f"respuesta: {(estado.get('respuesta') or '')[:200]}\n"
-        f"notas_tarifas: {(estado.get('notas_tarifas') or '')}\n"
-        f"notas_zonas: {(estado.get('notas_zonas') or '')}\n"
-        f"notas_recorridos: {(estado.get('notas_recorridos') or '')}\n"
-        f"notas_tiempos: {(estado.get('notas_tiempos') or '')}\n"
-        f"respuesta: {(estado.get('respuesta') or '')}\n"
+        "Eres el supervisor de un planificador de transporte (red ATM / Metro TMB).\n"
+        "Analiza el pedido del usuario y las notas recopiladas hasta ahora para decidir el siguiente paso:\n"
+        "- tarifas: consulta de billetes, abonos, precio o condiciones de uso.\n"
+        "- zonas: determinar la zona/sector tarifario de una población.\n"
+        "- recorridos: calcular rutas o transbordos entre estaciones/poblaciones.\n"
+        "- tiempos: consultar el tiempo de llegada del próximo metro TMB.\n"
+        "- sintetizar: une las notas recopiladas para redactar el plan final.\n"
+        "- FINISH: ya hay una respuesta/plan final completo.\n\n"
+        "Criterio: Elige SOLO los roles estrictamente necesarios para responder al pedido. "
+        "Si los datos necesarios ya están recopilados (o la consulta no requiere ciertos roles), pasa directamente a 'sintetizar'.\n\n"
+        f"Pedido: {estado.get('pedido')}\n"
+        f"Notas tarifas: {estado.get('notas_tarifas')}\n"
+        f"Notas zonas: {estado.get('notas_zonas')}\n"
+        f"Notas recorridos: {estado.get('notas_recorridos')}\n"
+        f"Notas tiempos: {estado.get('notas_tiempos')}\n"
+        f"Respuesta actual: {estado.get('respuesta')}\n"
     )
 
     try:
@@ -189,6 +183,9 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
         raw = _texto_llm(out.content)
         palabra = re.findall(r"[A-Za-z_]+", raw)
         siguiente = (palabra[0] if palabra else "").strip()
+        print("="*50)
+        print(f"OPCION ELEGIDA POR EL SUPERVISOR ANTES DE FALLBACK: {siguiente}")
+        print("="*50)
         if siguiente not in OPCIONES:
             siguiente = _fallback_siguiente(estado)
     except Exception:

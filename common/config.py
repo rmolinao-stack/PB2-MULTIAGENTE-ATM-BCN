@@ -30,8 +30,10 @@ TOP_K = 5 # Número de resultados a recuperar en la búsqueda (retrieval)
 
 # --- Generación ---
 #GEMINI_MODEL = "gemini-3.1-flash-lite"
-#GEMINI_MODEL ="gemini-3-flash-preview"
-GEMINI_MODEL ="gemini-3.1-flash-lite-preview"
+#GEMINI_MODEL = "gemini-3-flash-preview"
+#GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
+GEMINI_MODEL = "gemini-3.5-flash-lite"
+#GEMINI_MODEL = "gemini-3.6-flash"
 
 GENERATION_TEMPERATURE = 0.2
 AGENT_TEMPERATURE = 0.2
