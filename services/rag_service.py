@@ -32,7 +32,6 @@ def responder(pregunta: str, top_k: int | None = None) -> dict:
     chunks = recuperar(pregunta.strip(), top_k=top_k)
     contexto = formatear_contexto(chunks)
     prompt = build_rag_prompt(contexto, pregunta.strip())
-    #print(f"Prompt construido:\n{prompt}\n")
     respuesta = generar_respuesta(prompt)
 
     elapsed_ms = int((time.time() - started) * 1000)

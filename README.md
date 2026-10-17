@@ -293,6 +293,8 @@ Moltes gracies,
 * En requirements: pandas>=2.0.0, <3.0.0
 * Se incluye el wrapper "rag_ask(consulta: str)" en rag_service.py para usarlo como tool.
 * Se renombra app.py por app_rag.py para mantener el asistente de la primera versión.
+* Se excluye el documento 24_Descripcion_tipos_billetes_TMB.pdf dado que se trata 100% como imagen y al no devolver texto no genera contenido en el RAG.
+* Limpieza de print y comentarios de depuración.
 
 ## Decisiones técnicas
 * Se afina el prompt del nodo_supervisor para que solo llame a los nodos que necesite y no a todos.
