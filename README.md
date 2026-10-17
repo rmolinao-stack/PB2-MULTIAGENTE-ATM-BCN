@@ -2,11 +2,11 @@
 
 **ATeMto** es el nombre comercial de **PB2-MULTIAGENTE-ATM-BCN**
 
-**PB2-MULTIAGENTE-ATM-BCN** es un empleado sintetico capaz de calcular el trayecto entre dos estaciones de la red ATM de Barcelona (sistema integrado que permite utilizar diferentes medios de transporte como metro, autobuses, Ferrocarrils, TRAMvia y Rodalies), calcular los abonos necesario a adquirir, así como dar información sobre sus tarifas y condiciones de uso, además de ser capaz de calcular el tiempo que tardará llegar el siguiente metro (TMB) dada una estación concreta (no se incluye el calculo del tiempo de llegada de convoys a las estaciones de FGC, Rodalíes, TRAMvia y autobuses ya que está fuera del scope del proyecto).
+**ATeMto** es un empleado sintetico capaz de calcular el trayecto entre dos estaciones de la red ATM de Barcelona (sistema integrado que permite utilizar diferentes medios de transporte como metro, autobuses, Ferrocarrils, TRAMvia y Rodalies), calcular los abonos necesario a adquirir, así como dar información sobre sus tarifas y condiciones de uso, además de ser capaz de calcular el tiempo que tardará llegar el siguiente metro (TMB) dada una estación concreta (no se incluye el calculo del tiempo de llegada de convoys a las estaciones de FGC, Rodalíes, TRAMvia y autobuses ya que está fuera del scope del proyecto).
 
-**PB2-MULTIAGENTE-ATM-BCN** es una ampliación de **PB-RAG-ASISTENTE-TARIFAS-ATM-BCN** que es un asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
+**ATeMto** es una ampliación de **PB-RAG-ASISTENTE-TARIFAS-ATM-BCN** que es un asistente de tarifas y abonos para la red ATM de Barcelona - sistema tarifario integrado que permite utilizar diferentes medios de transporte (metro, autobuses, Ferrocarrils, TRAMvia y Rodalies). No es asistente de rutas, solo tarifas y abonos. Solo asiste tarifas de a ATM, no asiste tarifas de medio de transporte individual.
 
-**PB2-MULTIAGENTE-ATM-BCN** utiliza el RAG construido en **PB-RAG-ASISTENTE-TARIFAS-ATM-BCN**.
+**ATeMto** utiliza el RAG construido en **PB-RAG-ASISTENTE-TARIFAS-ATM-BCN**.
 
 ## Estructura del proyecto
 
@@ -40,7 +40,6 @@ PB2-MULTIAGENTE-ATM-BCN/
 │   └── tools/
 │       ├── __init__.py         # allowlist (@tool) + ejecutar_tool
 │       ├── api_tiempos_tmb.py  # Tool, para más detalle ver memoría.
-│       ├── hora_actual.py      # Tool, para más detalle ver memoría.
 │       ├── info_estacion.py    # Tool, para más detalle ver memoría.
 │       ├── rag_tarifas.py      # Tool, para más detalle ver memoría.
 │       ├── ruta_plano.py       # Tool, para más detalle ver memoría.
@@ -146,7 +145,6 @@ streamlit run app_agent.py
   python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones.
   python main.py --test-tool-id-estacion      # Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación.
   python main.py --test-tool-llegada-tren     # Ejecuta un test de pruebas para la tool de obtención de los tiempos de llegada de trenes en TMB.
-  python main.py --test-tool-hora-actual      # Ejecuta un test de pruebas para la tool de obtención de la hora actual.
 ```
 
 ## Orden de ejecución estandar
@@ -207,9 +205,6 @@ A continuación se describen los nodos:
     * Se hace una llamada a Gemini pasandole un csv preformateado con la relación código y estación.
     * Inicialmente se planteo hacer una función determinista como en el caso de las poblaciones. No obstante se detecto que el resultado en caso de escribir la poblaciones con errores, daba mucho mejor resultado hacerlo con un LLM y se decidió dejar así.
 * **obtener_nombre_estacion_oficial**: Esta tool dada un id de estación devuelve el nombre oficial de una estación. Esta función se ha construido por si el modelo en algún momento necesita aclarar como se denomina una estación concreta que pueda aparecer en la API API_llegada_tren_estacion_tmb. Su uso debería ser para casos muy puntuales.
-  * Tipo de tool: Herramienta auxiliar determinista.
-  * Determinista?: Si
-* **obtener_hora_actual**: Tool auxiliar para saber la fecha y hora actual. Se puede utilizar para saber cuando es "ahora".
   * Tipo de tool: Herramienta auxiliar determinista.
   * Determinista?: Si
 
