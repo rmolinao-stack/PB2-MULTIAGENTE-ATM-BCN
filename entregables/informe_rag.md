@@ -23,7 +23,7 @@ Modelos utilizados para generar el informe:
 
 ```text
 --- Resumen ingesta ---
-  Documentos cargados:      65
+  Documentos cargados:      58
   Tras limpieza:            58
   Chunks generados:         157
   Chunks por fuente:
@@ -40,7 +40,7 @@ Modelos utilizados para generar el informe:
 * CHUNK_OVERLAP = 150
 ```text
 --- Resumen ingesta ---
-  Documentos cargados:      65
+  Documentos cargados:      58
   Tras limpieza:            58
   Chunks generados:         91
   Chunks por fuente:
@@ -57,7 +57,7 @@ Modelos utilizados para generar el informe:
 * CHUNK_OVERLAP = 300
 ```text
 --- Resumen ingesta ---
-  Documentos cargados:      65
+  Documentos cargados:      58
   Tras limpieza:            58
   Chunks generados:         62
   Chunks por fuente:
