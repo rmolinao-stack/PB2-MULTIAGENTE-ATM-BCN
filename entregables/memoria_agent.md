@@ -4,7 +4,7 @@ En este apartado se describen los detalles de arquitéctura relacionados con la 
 
 ## Workflow LangGraph
 
-![Grafo](../img/image.png)
+![Grafo](../img/flujo.jpg)
 
 ```text
 START -> supervisor ──┬── tarifas ──────────┐
