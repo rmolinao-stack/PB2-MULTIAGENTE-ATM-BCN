@@ -85,7 +85,7 @@ with st.sidebar:
         _reset()
         st.rerun()
 
-st.title("ATeMto - Tu agente de ATM")
+st.title(":gray[AT]e:gray[M]to - Agente de transporte ATM")
 st.caption("Multiagente · ATM")
 
 if "messages" not in st.session_state:

@@ -167,15 +167,16 @@ streamlit run app_agent.py
 
 ## Workflow LangGraph
 
+![alt text](./img/image.png)
 
 ```text
-START → supervisor  ──┬── tarifas ──────────┐
-                      ├── zonas ────────────┼──► supervisor → …
-                      ├── recorridos ───────┤
-                      ├── tiempos ──────────┤
-                      └── sintetizar ───────┘
-                              │
-                     FINISH → aplicar (interrupt_before) → END
+START -> supervisor ──┬── tarifas ──────────┐
+          ▲  ▲        ├── zonas ────────────┼──► supervisor -> sintetizar -> supervisor -> FINISH -> HITL -> aplicar -> END
+          │  │        ├── recorridos ───────┤        │                                                          │
+          │  │        └── tiempos   ────────┘        │                                                     (RECHAZO HITL)
+          │  │                                       │                                                          │    
+          │  └───────────────────────────────────────┘                                                          │
+          └─────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 A continuación se describen los nodos:
 * **supervisor**: Encargado de decidir si se llama a un especialista y de continuar el blucle o finalizarlo (previo HITL si toca).
@@ -294,7 +295,9 @@ Moltes gracies,
 * Se renombra app.py por app_rag.py para mantener el asistente de la primera versión.
 
 ## Decisiones técnicas
-
+* Se afina el prompt del nodo_supervisor para que solo llame a los nodos que necesite y no a todos.
+* Se afina el nodo_sintetizar para que no invente planes en caso de que no se capaz de generar un plan con la pregunta del usuario.
+* Se afina el prompt del nodo_sintetizar para que devuelva lo que es capaz de hacer en caso de que le saluden o le pregunten cosas genéricas. 
 ## Cosas a mejorar
 
 

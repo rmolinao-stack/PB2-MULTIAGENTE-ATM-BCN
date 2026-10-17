@@ -48,19 +48,10 @@ MAX_ITER = 8
 
 DEMO_MENSAJES = [
     (
-        "¿Cual es el billete de 10 viajes integrado?"
+        "Como puedo ir de Santa Coloma a Alella, que abono tengo que comprar si realizar más de 10 viajes al mes y a que hora llega el próximo metro a Santa Coloma."
     ),
     (
-        "¿A que zona pertenece Alella?"
-    ),
-    (
-        "¿Como puedo ir de Alella a Viladecavalls?"
-    ),
-    (
-        "¿Cuantas estaciones tiene la línea 1 del metro?"
-    ),
-    (
-        "¿Como puedo ir de Santa Coloma a Alella, cuanto tarda en llegar el tren y que billete tengo que comprar si hago varios viajes al mes?"
+        "Dime la ruta que hay entre creu alta y ripoll. Dime los transbordos necesarios. Qu billete tengo que comprar para hacer este viaje. Y cuando llegaría el siguiente tren si mi estación origen es creu alta."
     ),
 ]
 

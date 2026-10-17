@@ -1,13 +1,13 @@
 """Grafo multiagente: supervisor ↔ especialistas + HITL.
 
 Flujo:
-START → supervisor  ──┬── tarifas ──────────┐
-                      ├── zonas ────────────┼──► supervisor → …
-                      ├── recorridos ───────┤
-                      ├── tiempos ──────────┤
-                      └── sintetizar ───────┘
-                              │
-                     FINISH → aplicar (interrupt_before) → END
+START -> supervisor ──┬── tarifas ──────────┐
+          ▲  ▲        ├── zonas ────────────┼──► supervisor -> sintetizar -> supervisor -> FINISH -> HITL -> aplicar -> END
+          │  │        ├── recorridos ───────┤        │                                                          │
+          │  │        └── tiempos   ────────┘        │                                                     (RECHAZO HITL)
+          │  │                                       │                                                          │    
+          │  └───────────────────────────────────────┘                                                          │
+          └─────────────────────────────────────────────────────────────────────────────────────────────────────┘
 """
 import re
 from typing import Annotated, Any, Literal, TypedDict
@@ -157,18 +157,29 @@ def nodo_supervisor(estado: EstadoGrafo) -> dict:
             "log": [f"iter {it}: supervisor → FINISH (MAX_ITER)"],
         }
 
+    # RMO: Si ya hay respuesta y plan generado por sintetizar, pasamos directamente a FINISH.
+    # Lo hacemos manualmente porque parece que al LLM le cuesta reconocer que ya hay un plan listo.
+    if estado.get("respuesta") and estado.get("plan"):
+        return {
+            "iteracion": it,
+            "siguiente": "FINISH",
+            "log": [f"iter {it}: supervisor → FINISH (plan ya sintetizado)"],
+        }
+
     llm = get_llm(temperature=0)
     prompt = (
-        "Eres el supervisor de un planificador de transporte (red ATM / Metro TMB).\n"
+        "Eres el supervisor de ATeMto, un planificador multiagente de transporte (red ATM / Metro TMB).\n"
         "Analiza el pedido del usuario y las notas recopiladas hasta ahora para decidir el siguiente paso:\n"
         "- tarifas: consulta de billetes, abonos, precio o condiciones de uso.\n"
         "- zonas: determinar la zona/sector tarifario de una población.\n"
         "- recorridos: calcular rutas o transbordos entre estaciones/poblaciones.\n"
         "- tiempos: consultar el tiempo de llegada del próximo metro TMB.\n"
-        "- sintetizar: une las notas recopiladas para redactar el plan final.\n"
-        "- FINISH: ya hay una respuesta/plan final completo.\n\n"
-        "Criterio: Elige SOLO los roles estrictamente necesarios para responder al pedido. "
-        "Si los datos necesarios ya están recopilados (o la consulta no requiere ciertos roles), pasa directamente a 'sintetizar'.\n\n"
+        "- sintetizar: Llama a sintetizar cuando ya se hayan recopilado todas las notas para redactar el plan final. "
+        "Se encarga de unir las notas recopiladas para redactar el plan final. Pasa directamente a 'FINISH' una vez completado.\n"
+        "- FINISH: ya hay una respuesta o un plan final listo completo.\n\n"
+        "Responde SOLO con una palabra, SOLO con una palabra: tarifas, zonas, recorridos, tiempos, sintetizar o FINISH.\n"
+        "Si los datos necesarios de las notas ya están recopilados (o la consulta no requiere ciertos roles), pasa directamente a 'sintetizar' para dar una respuesta final.\n" \
+        "Con el plan listo dado por el especialista 'sintetizar' pasa directamente a 'FINISH'.\n\n"
         f"Pedido: {estado.get('pedido')}\n"
         f"Notas tarifas: {estado.get('notas_tarifas')}\n"
         f"Notas zonas: {estado.get('notas_zonas')}\n"
@@ -287,33 +298,38 @@ def nodo_sintetizar(estado: EstadoGrafo) -> dict:
     """Une las notas en respuesta + plan (viñetas). Deja el flujo listo para HITL."""
     llm = get_llm()
     prompt = (
-        "Une las notas en un plan de rutas, tarifas y zonas de la red ATM y tiempos de llegada de trenes a las estaciones de Metro (TMB).\n"
-        "Incluye al menos 2 opciones como viñetas que empiecen por '- '.\n"
+        "Une las notas del plan de transporte (red ATM / Metro TMB)\n"
+        "Incluye al menos 2 opciones (pero puedes incluir más opciones) como viñetas que empiecen por '- '.\n"
         "Una intro de 1-2 frases y luego las viñetas.\n\n"
-        f"Pedido: {estado.get('pedido')}\n"
+        f"Pedido del usuario: {estado.get('pedido')}\n"
         f"Tarifas: {estado.get('notas_tarifas') or '(nada)'}\n"
         f"Zonas: {estado.get('notas_zonas') or '(nada)'}\n"
         f"Recorridos: {estado.get('notas_recorridos') or '(nada)'}\n"
         f"Tiempos: {estado.get('notas_tiempos') or '(nada)'}\n"
+        "Excepciones: Si el pedido del usuario es un saludo ('hola', 'buenas', etc.):\n"
+        "   - Saluda de forma amable e indícale que estás listo para ayudarle.\n"
+        "   - Ofrece como opciones (en viñetas con '- ') las diferentes consultas"
+        " que puede hacerte para continuar la conversación (calcular rutas,"
+        " consultar tarifas/zonas o ver tiempos de espera del Metro TMB)."
     )
     out = llm.invoke([HumanMessage(content=prompt)])
     texto = _texto_llm(out.content)
     plan = _parse_plan(texto)
+
+    print("Texto generado por el LLM:", texto)
+    print("Plan parseado:", plan)
+    
     if len(plan) < 2:
-        # Fallback mínimo para poder pausar en HITL con algo que mostrar
+        print("No se generó un plan, se usarán las opciones por defecto.")
         plan = [
-            p
-            for p in (
-                (estado.get("notas_tarifas") or "").split(".")[0].strip(),
-                (estado.get("notas_zonas") or "").split(".")[0].strip(),
-                (estado.get("notas_recorridos") or "").split(".")[0].strip(),
-                (estado.get("notas_tiempos") or "").split(".")[0].strip(),
-            )
-            if p
+            "Consulta sobre una ruta o itinerario entre dos estaciones.",
+            "Pregunta por zonas tarifarias, abonos de transporte o precios.",
+            "Consulta el tiempo de llegada del próximo metro TMB a una estación.",
         ]
-        if len(plan) < 2:
-            plan = ["Plan ruta, tarifa, zonas o tiempo según preferencias", "Cierre"]
-        texto = texto or "Plan propuesto:\n" + "\n".join(f"- {p}" for p in plan)
+        texto = texto or (
+            "¡Hola! Soy **ATeMto**, tu asistente de transporte de la ATM de Barcelona. ¿En qué puedo ayudarte hoy?\n\n"
+            + "\n".join(f"- {p}" for p in plan)
+        )
     return {
         "respuesta": texto,
         "plan": plan,
