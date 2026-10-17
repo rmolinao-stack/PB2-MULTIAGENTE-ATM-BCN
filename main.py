@@ -268,10 +268,6 @@ def main() -> None:
         print(f"EVALUACION 1 - Gemini: {obtener_nombre_estacion_oficial.func('339')}")
         print(f"EVALUACION 2 - Gemini: {obtener_nombre_estacion_oficial.func(225)}")
         print(f"EVALUACION 3 - Gemini: {obtener_nombre_estacion_oficial.func(225123456)}")
-
-
-        
-        
-
+      
 if __name__ == "__main__":
     main()
