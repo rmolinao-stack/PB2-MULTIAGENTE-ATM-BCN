@@ -24,7 +24,8 @@ Uso para test de tools
   python main.py --test-tool-zonas            # Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones.
   python main.py --test-tool-id-estacion      # Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación.
   python main.py --test-tool-llegada-tren     # Ejecuta un test de pruebas para la tool de obtención de los tiempos de llegada de trenes en TMB.
-  python main.py --test-tool-hora-actual      # Ejecuta un test de pruebas para la tool de obtención de la hora actual.
+  python main.py --test-tool-nombre-estacion  # Ejecuta un test de pruebas para la tool de obtención del nombre oficial de la estación.
+
 
 
 App Streamlit: streamlit run app_rag.py
@@ -71,7 +72,7 @@ def ejecutar_opcion_ask(pregunta: str, top_k: int | None) -> None:
         indent=2,
     ))
 
-def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: int | None) -> None:
+def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: int | None) -> dict:
     print("Ejecutando multiagente en modo interactivo...")
     estado = crear_estado("")
     tid = nuevo_thread_id()
@@ -128,18 +129,32 @@ def ejecutar_opcion_multiagente_interactivo(max_turns: int | None, max_steps: in
             break
     
     estado["thread_id"] = tid
-    
     return estado
 
-def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> None:
+def ejecutar_opcion_multiagente_demo(max_turns: int | None, max_steps: int | None, sin_auto_aprobar: bool) -> dict:
     print("Ejecutando multiagente en modo demo...")
-    # Aquí se llamaría a la función correspondiente del multiagente en modo demo
 
-    run_demo(
+    return run_demo(
         max_turns=max_turns,
         max_steps=max_steps,
         auto_aprobar=not sin_auto_aprobar,
     )
+
+def _resumen(estado: dict, max_turns: int | None, max_steps: int | None) -> None:
+    traza = estado.get("traza") or []
+    if max_turns is None:
+        max_turns = MAX_TURNS_DEFAULT
+    if max_steps is None:
+        max_steps = MAX_STEPS_DEFAULT
+    print("="*20 + " resumen " + "="*20)
+    print(
+        f"turnos: {len(traza)}/{max_turns} | done: {estado.get('done')} "
+        f"| hitl: {estado.get('pendiente_hitl')} | error: {bool(estado.get('error'))}"
+    )
+    print(f"thread_id: {estado.get('thread_id')}")
+    print(f"max_steps: {max_steps}")
+    print("log:", estado.get("log"))
+    print("="*20 + " fin resumen " + "="*20)
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -173,8 +188,8 @@ def main() -> None:
     parser.add_argument("--test-tool-zonas", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención de la zona de varias poblaciones")
     parser.add_argument("--test-tool-id-estacion", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención del ID_ESTACION a partir del nombre de la estación")
     parser.add_argument("--test-tool-llegada-tren", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención del tiempo de llegada de un tren a una estación")
-    parser.add_argument("--test-tool-hora-actual", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención de la hora actual.")
-    
+    parser.add_argument("--test-tool-nombre-estacion", action="store_true", help="Ejecuta un test de pruebas para la tool de obtención del nombre oficial de la estación")
+
     args = parser.parse_args()
 
     ############# RMO: RAG ###################
@@ -198,10 +213,14 @@ def main() -> None:
     ############# RMO: MULTIAGENTE ###################
     if args.agente_interactivo:
         print("Opción agente-interactivo seleccionada ...")
-        ejecutar_opcion_multiagente_interactivo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
+        resultado = ejecutar_opcion_multiagente_interactivo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
+        _resumen(resultado, max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
+        print(json.dumps(resultado, ensure_ascii=False, indent=2, default=str))
     if args.agente_demo:
         print("Opción agente-demo seleccionada ...")
-        ejecutar_opcion_multiagente_demo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps, sin_auto_aprobar=args.agente_sin_auto_aprobar)
+        resultado = ejecutar_opcion_multiagente_demo(max_turns=args.agente_max_turns, max_steps=args.agente_max_steps, sin_auto_aprobar=args.agente_sin_auto_aprobar)
+        _resumen(resultado, max_turns=args.agente_max_turns, max_steps=args.agente_max_steps)
+        print(json.dumps(resultado, ensure_ascii=False, indent=2, default=str))
 
     ############# RMO: TEST TOOLS ###################
     if args.test_tool_plano:
@@ -241,10 +260,17 @@ def main() -> None:
         print("EVALUACION 2: ", API_llegada_tren_estacion_tmb.func(225))
         print("EVALUACION 3: ", API_llegada_tren_estacion_tmb.func(225, forzar_fallback=True))
         print("EVALUACION 4: ", API_llegada_tren_estacion_tmb.func(2252345556))
-    if args.test_tool_hora_actual:
-        print("Opción test-tool-hora-actual seleccionada ...")
-        from multiagent.tools.hora_actual import obtener_hora_actual
-        print("EVALUACION 1: ", obtener_hora_actual.func())
+    if args.test_tool_nombre_estacion:
+        print("Opción test-tool-nombre-estacion seleccionada ...")
+        from multiagent.tools.info_estacion import obtener_nombre_estacion_oficial
+        from common.cargar_api_key import configurar_gemini_api_key
+        configurar_gemini_api_key()
+        print(f"EVALUACION 1 - Gemini: {obtener_nombre_estacion_oficial.func('339')}")
+        print(f"EVALUACION 2 - Gemini: {obtener_nombre_estacion_oficial.func(225)}")
+        print(f"EVALUACION 3 - Gemini: {obtener_nombre_estacion_oficial.func(225123456)}")
+
+
+        
         
 
 if __name__ == "__main__":

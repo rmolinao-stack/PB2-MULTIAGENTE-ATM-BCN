@@ -67,6 +67,12 @@ PB2-MULTIAGENTE-ATM-BCN/
 
 ## Instalación del entorno de desarrollo y APIs
 
+Obtención del código fuente via git:
+
+```text
+git clone https://github.com/rmolinao-stack/PB2-MULTIAGENTE-TARIFAS-ATM-BCN
+```
+
 Se recomienda la instalación de un entorno virtual como Conda o Env. Ejemplo:
 
 ```text
@@ -208,7 +214,6 @@ A continuación se describen los nodos:
   * Tipo de tool: Herramienta auxiliar determinista.
   * Determinista?: Si
 
-
 ## API iMetro
 
 Apartado especial para explicar las particularidades de la API.
@@ -295,8 +300,10 @@ Moltes gracies,
 * Se afina el prompt del nodo_supervisor para que solo llame a los nodos que necesite y no a todos.
 * Se afina el nodo_sintetizar para que no invente planes en caso de que no se capaz de generar un plan con la pregunta del usuario.
 * Se afina el prompt del nodo_sintetizar para que devuelva lo que es capaz de hacer en caso de que le saluden o le pregunten cosas genéricas. 
-## Cosas a mejorar
+* Se planteo limitar las tools por nodo de una manera más controlada. Por ejemplo que NODO TARIFAS solo pudiera llamar a rag_ask_tarifas o que NODO ZONAS solo pudiera llamar a zonas_poblacion_text, pero se detecto que era excesivamente restrictivo, de tal foma que los agente al tener poca información, no sabían que hacer. Sería un tema a analizar a futuro para afinar el sistema, pero en esta fase ha quedado fuera de scope. 
 
+## Cosas a mejorar
+* Acotar la allowlist de las tools por nodo en vez de a nivel general, para evitar que un nodo llame a una tool que no tiene nada que ver con su responsabilidad.
 
 
 

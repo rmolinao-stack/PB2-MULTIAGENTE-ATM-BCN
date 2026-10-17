@@ -50,9 +50,9 @@ DEMO_MENSAJES = [
     (
         "Como puedo ir de Santa Coloma a Alella, que abono tengo que comprar si realizar más de 10 viajes al mes y a que hora llega el próximo metro a Santa Coloma."
     ),
-    (
-        "Dime la ruta que hay entre creu alta y ripoll. Dime los transbordos necesarios. Qu billete tengo que comprar para hacer este viaje. Y cuando llegaría el siguiente tren si mi estación origen es creu alta."
-    ),
+    #(
+    #    "Dime la ruta que hay entre creu alta y ripoll. Dime los transbordos necesarios. Qu billete tengo que comprar para hacer este viaje. Y cuando llegaría el siguiente tren si mi estación origen es creu alta."
+    #),
 ]
 
 PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"

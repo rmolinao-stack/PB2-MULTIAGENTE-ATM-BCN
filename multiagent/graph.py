@@ -90,6 +90,7 @@ def _ejecutar_con_tools(
     El LLM puede pedir tools; Python las ejecuta (allowlist).
     Se repite hasta que haya texto final o se agote max_steps.
     """
+    #tools_nodo = tools if tools is not None else TOOLS
     llm = get_llm().bind_tools(TOOLS)
     messages: list = [SystemMessage(content=system), HumanMessage(content=user)]
     traza: list[dict[str, Any]] = []
@@ -125,8 +126,8 @@ def _ejecutar_con_tools(
     else:
         texto = texto or "He parado por max_steps en el especialista."
 
-    print("Resultado del especialista:", texto)
-    print("Traza del especialista:", traza)
+    #print("Resultado del especialista:", texto)
+    #print("Traza del especialista:", traza)
 
     return texto, traza
 
