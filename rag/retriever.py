@@ -4,7 +4,7 @@ from google import genai
 
 from common.config import TOP_K, COLLECTION_NAME
 from .embed import embeddear_consulta
-from .gemini_auth import configurar_gemini_api_key
+from common.cargar_api_key import configurar_gemini_api_key
 from .index import obtener_cliente_chroma, obtener_coleccion
 
 def _log_retrieval(pregunta: str, top_k: int) -> None:

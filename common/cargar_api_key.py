@@ -1,17 +1,17 @@
-"""Configura GEMINI_API_KEY antes de llamar a la API."""
+"""Se agrupan todas las funciones para cargar las API keys necesarias."""
 
 import getpass
 import os
 
 from dotenv import load_dotenv
 
-_configured = False
+_configured_gemini = False
 
 
 def configurar_gemini_api_key() -> None:
     """Carga la API key una sola vez por ejecución."""
-    global _configured
-    if _configured:
+    global _configured_gemini
+    if _configured_gemini:
         return
 
     load_dotenv()
@@ -25,4 +25,4 @@ def configurar_gemini_api_key() -> None:
         "GEMINI_API_KEY configurada:",
         "sí" if os.getenv("GEMINI_API_KEY") else "no",
     )
-    _configured = True
+    _configured_gemini = True

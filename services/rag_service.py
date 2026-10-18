@@ -8,10 +8,10 @@ El frontend (o quien los consuma) llamará a estas funciones.
 import time
 
 from common.config import GEMINI_MODEL
-from core.retriever import recuperar
-from core.context import formatear_contexto
-from core.prompts import build_rag_prompt
-from core.generate import generar_respuesta
+from rag.retriever import recuperar
+from rag.context import formatear_contexto
+from rag.prompts import build_rag_prompt
+from rag.generate import generar_respuesta
 from common.utils import _extraer_fuentes
 
 def responder(pregunta: str, top_k: int | None = None) -> dict:
@@ -32,7 +32,6 @@ def responder(pregunta: str, top_k: int | None = None) -> dict:
     chunks = recuperar(pregunta.strip(), top_k=top_k)
     contexto = formatear_contexto(chunks)
     prompt = build_rag_prompt(contexto, pregunta.strip())
-    #print(f"Prompt construido:\n{prompt}\n")
     respuesta = generar_respuesta(prompt)
 
     elapsed_ms = int((time.time() - started) * 1000)
@@ -47,7 +46,8 @@ def responder(pregunta: str, top_k: int | None = None) -> dict:
         "error": None,
     }
 
+
 def rag_ask(consulta: str) -> str:
-    """Pendiente documentar."""
-    print("rag_ask: Pendiente de realizar")    
-    return None
+    """Función auxiliar para realizar un RAG completo y devolver solo la respuesta generada."""
+    resultado = responder(consulta)
+    return resultado.get("respuesta") if resultado else None

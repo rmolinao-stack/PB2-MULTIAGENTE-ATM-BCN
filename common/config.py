@@ -30,11 +30,33 @@ TOP_K = 5 # Número de resultados a recuperar en la búsqueda (retrieval)
 
 # --- Generación ---
 #GEMINI_MODEL = "gemini-3.1-flash-lite"
-#GEMINI_MODEL ="gemini-3-flash-preview"
-GEMINI_MODEL ="gemini-3.1-flash-lite-preview"
+#GEMINI_MODEL = "gemini-3-flash-preview"
+#GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
+GEMINI_MODEL = "gemini-3.5-flash-lite"
+#GEMINI_MODEL = "gemini-3.6-flash"
 
 GENERATION_TEMPERATURE = 0.2
+AGENT_TEMPERATURE = 0.2
 
 # --- Evaluación ---
 QUERIES_EVAL_JSON = Path(__file__).parent.parent / "queries" / "preguntas_eval.json"
 
+# --- Parámetros por defecto para el multi agente ---
+MAX_STEPS_DEFAULT = 4
+MAX_TURNS_DEFAULT = 6
+MAX_ITER = 8
+
+DEMO_MENSAJES = [
+    (
+        "Como puedo ir de Santa Coloma a Alella, que abono tengo que comprar si realizar más de 10 viajes al mes y a que hora llega el próximo metro a Santa Coloma."
+    ),
+    #(
+    #    "Dime la ruta que hay entre creu alta y ripoll. Dime los transbordos necesarios. Qu billete tengo que comprar para hacer este viaje. Y cuando llegaría el siguiente tren si mi estación origen es creu alta."
+    #),
+]
+
+PLANO_ATM_PATH = Path(__file__).parent.parent / "assets" / "plano_ATM.jpg"
+ESTACIONS_CSV_PATH = Path(__file__).parent.parent / "assets"  / "estacions.csv"
+
+TMB_METRO_ESTACIONS_URL = "https://api.tmb.cat/v1/itransit/metro/estacions?estacions="
+HTTP_TIMEOUT_SECONDS = 12

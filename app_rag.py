@@ -1,5 +1,5 @@
 """Interfaz Streamlit 
-  streamlit run app.py
+  streamlit run app_rag.py
 """
 
 from __future__ import annotations

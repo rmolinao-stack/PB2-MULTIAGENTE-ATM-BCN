@@ -69,17 +69,6 @@ def imprimir_resumen_consola(chunks: list[Document], stats: dict) -> None:
     for fuente, n in sorted(stats["chunks_por_fuente"].items()):
         print(f"    {fuente}: {n}")
 
-    #RMO: No mostramos los chunks de ejemplo para no saturar la consola.
-    #if not chunks:
-    #    return
-
-    #_mostrar_chunk_ejemplo("Muestra: primer chunk", chunks[0])
-
-    #for chunk in chunks:
-    #    if chunk.metadata.get("tipo") == "Tarifas_por_zonan" or chunk.metadata.get("tipo") == "Municipios_por_zona":
-    #        _mostrar_chunk_ejemplo("Muestra: medición CSV", chunk)
-    #        break
-
 def ejecutar_ingesta() -> tuple[list[Document], Path, dict]:
     """Ejecuta la ingesta de documentos y genera los chunks para embeddings."""
     print(f"Ingesta: cargando documentos desde {DATA_DIR} ...")
@@ -89,18 +78,8 @@ def ejecutar_ingesta() -> tuple[list[Document], Path, dict]:
     limpios = limpiar_documentos(crudos)
     print(f"  Tras limpieza: {len(limpios)}")
 
-    # RMO: Para depurar que nos devuelve cada documento limpiado.
-    #for c in limpios:
-    #    print(c)
-    #    input()
-
     chunks = fragmentar_documentos(limpios)
     print(f"  Chunks generados: {len(chunks)}")
-
-    #RMO: Para depurar que nos devuelve cada chunk.
-    #for c in chunks:
-    #    print(c)
-    #    input()
 
     stats = calcular_stats_ingesta(crudos, limpios, chunks)
     ruta = guardar_chunks_json(chunks, CHUNKS_JSON, stats)
