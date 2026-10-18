@@ -28,9 +28,10 @@ PB2-MULTIAGENTE-ATM-BCN/
 │   ├── carga_api_key.py        # Carga de API key de gemini.
 │   └── utils.py                # Funciones genéricas auxiliares y reutilizables.
 ├── data/                       # Corpus del RAG
-├── entregables/                # informe final.
-│   ├── informe_agent.md        # informe final de la parte de multiagente.
-│   └── informe_rag.md          # informe final de la parte de rag.
+├── entregables/                # memorias e informe final.
+│   ├── memoria_agent.md        # memoria de la parte de multiagente.
+│   ├── memoria_rag.md          # memoria de la parte de rag.
+│   └── Presentacion.pdf        # Presentación del producto.
 ├── img/                        # Imagenes varias de apoyo.
 ├── multiagent/                 # Carpeta donde guardamos los ficheros de la capa de negocio del multiagente.
 │   ├── __init__.py
