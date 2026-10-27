@@ -171,12 +171,11 @@ streamlit run app_agent.py
 ## Memoría del proyecto
 
 **Memoria de la construcción del multiagente**: [Pulsa aquí](./entregables/memoria_agent.md)
-* En este memoría podrás encontrar los detalles de arquitectura del multiagente, tales como el workflow de LangGraph que se ha implementado, la descripción de los especialistas, las tools incluidas en el proyecto y detalles sobre la API de iMetro utilizada entre otros detalles.
+* En esta memoría podrás encontrar los detalles de arquitectura del multiagente, tales como el workflow de LangGraph que se ha implementado, la descripción de los especialistas, las tools incluidas en el proyecto y detalles sobre la API de iMetro utilizada entre otros detalles.
 
 **Memoria de la construcción del RAG**: [Pulsa aquí](./entregables/memoria_rag.md)
 * En esta memoría podrás encontrar los detalles de arquitectura específicos del RAG que se utliza en la tool rag_tarifas y que viee hererada del proyecto PB-RAG-ASISTENTE-TARIFAS-ATM-BCN
 
-#  **A PARTIR DE AQUI MEMORIA - PENDIENTE**
 
 
 
